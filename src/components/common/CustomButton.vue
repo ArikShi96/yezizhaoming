@@ -2,8 +2,7 @@
   <div
     v-loading="loading"
     element-loading-spinner="el-icon-loading"
-    class="custom-button"
-    :class="type"
+    :class="className"
     @click="handleClick"
   >
     {{ text }}
@@ -26,6 +25,11 @@ export default {
       type: Boolean,
     },
   },
+  computed: {
+    className() {
+      return `custom-button ${this.disabled ? "disabled" : ""} ${this.type}`;
+    },
+  },
   methods: {
     handleClick() {
       if (this.loading || this.disabled) {
@@ -38,6 +42,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .custom-button {
+  font-family: PingFang, PingFang-SC;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -53,16 +58,24 @@ export default {
   &:focus {
     opacity: 0.7;
   }
+  &.disabled {
+    pointer-events: none;
+  }
   &.primary {
     background: #99c901;
   }
   &.primary-plain {
     background: #e6eece;
-    border: 1px solid #99c901;
+    border: 0.0625rem solid #99c901;
     color: #99c901;
   }
+  &.default {
+    background: #ffffff;
+    border: 0.0625rem solid #ededed;
+    color: #666666;
+  }
   /deep/ .el-loading-spinner {
-    margin-top: -10px;
+    margin-top: -0.625rem;
     .el-icon-loading {
       color: #99c901;
     }

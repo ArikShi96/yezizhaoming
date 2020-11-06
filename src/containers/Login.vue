@@ -90,11 +90,11 @@ export default {
     validatePhone(value) {
       const phoneReg = /^1[345678]\d{9}$/;
       if (!this.formData.phone) {
-        this.$message.error("请输入手机号");
+        this.$alert("请输入手机号");
         return false;
       }
       if (!phoneReg.test(value)) {
-        this.$message.error("手机号格式不正确");
+        this.$alert("手机号格式不正确");
         return false;
       }
       return true;
@@ -102,7 +102,7 @@ export default {
     // 验证验证码
     validateCode(code) {
       if (!code) {
-        this.$message.error("请输入验证码");
+        this.$alert("请输入验证码");
         return false;
       }
       return true;
@@ -140,6 +140,7 @@ export default {
         this.validateCode(this.formData.passCode)
       ) {
         //
+        this.navigateHome();
       }
     },
     // 绑定手机号
@@ -149,14 +150,20 @@ export default {
         this.validateCode(this.formData.passCode)
       ) {
         //
+        this.navigateHome();
       }
+    },
+    // navigate 首页
+    navigateHome() {
+      this.$router.push({ path: "/" });
     },
   },
 };
 </script>
 <style lang="scss" scoped>
 .login-page {
-  height: 100vh;
+  height: 100%;
+  width: 100%;
 }
 .first-step {
   height: 100%;
@@ -222,7 +229,7 @@ export default {
         top: 0.75rem;
       }
       &.code {
-        top: 5.125rem;
+        bottom: 0.85rem;
       }
     }
     /deep/ .el-input .el-input__inner {
@@ -236,7 +243,7 @@ export default {
     /deep/ .custom-button {
       font-family: PingFang, PingFang-SC;
       position: absolute;
-      top: 5.125rem;
+      bottom: 0.75rem;
       right: 0.5rem;
       padding: 0.25rem;
       height: 1.5625rem;
