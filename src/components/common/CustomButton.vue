@@ -69,6 +69,11 @@ export default {
     border: 0.0625rem solid #99c901;
     color: #99c901;
   }
+  &.primary-plain-white {
+    background: #ffffff;
+    border: 0.0625rem solid #99c901;
+    color: #99c901;
+  }
   &.default {
     background: #ffffff;
     border: 0.0625rem solid #ededed;

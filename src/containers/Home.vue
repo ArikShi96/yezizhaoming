@@ -1,5 +1,14 @@
 <template>
   <div class="home-page">
+    <swiper id="swiperBox" :options="swiperOption" ref="swiper">
+      <swiper-slide
+        v-for="(swiper, index) in swipers"
+        :key="index"
+        class="swiper-slide"
+      >
+        <img class="swiper-image" :src="swiper" alt="" />
+      </swiper-slide>
+    </swiper>
     <div class="home-links">
       <v-button
         text="我要创作"
@@ -15,14 +24,37 @@
   </div>
 </template>
 <script>
+import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/css/swiper.css";
+import SwiperOption from "@/utils/swiperOption.js";
+import BgImg from "@/assets/image/test/bg.jpg";
+import BgImg2 from "@/assets/image/test/bg2.png";
 export default {
+  components: {
+    Swiper,
+    SwiperSlide,
+  },
   data() {
-    return {};
+    return {
+      BgImg,
+      BgImg2,
+      swiperOption: { ...SwiperOption },
+      swipers: [],
+    };
+  },
+  mounted() {
+    this.fetchSwiperList();
   },
   methods: {
+    // 获取轮播图
+    async fetchSwiperList() {
+      this.swipers = [BgImg, BgImg2];
+    },
     // 跳转
     navigateCreate() {},
-    navigateWorkList() {},
+    navigateWorkList() {
+      this.$router.push({ name: "WorkList" });
+    },
   },
 };
 </script>
@@ -39,10 +71,19 @@ export default {
     width: 100%;
     left: 0;
     bottom: 1.75rem;
+    z-index: 99;
     /deep/ .custom-button {
       width: 7.5rem;
       margin: 0 1rem;
     }
+  }
+  /deep/ .swiper-wrapper {
+    height: 100vh !important;
+  }
+  .swiper-image {
+    width: 100vw;
+    height: 100vh;
+    object-fit: cover;
   }
 }
 </style>

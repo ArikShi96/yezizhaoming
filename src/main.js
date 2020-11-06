@@ -13,6 +13,7 @@ import VueDraggableResizableRotatable from "vue-draggable-resizable-rotatable";
 import CustomAlert from "@/components/common/CustomAlert.vue";
 import CustomButton from "@/components/common/CustomButton.vue";
 import CustomDropdown from "@/components/common/CustomDropdown.vue";
+import CustomRadio from "@/components/common/CustomRadio.vue";
 
 Vue.use(VueDraggableResizableRotatable);
 Vue.use(element);
@@ -24,9 +25,16 @@ Vue.component(
 Vue.component("v-alert", CustomAlert);
 Vue.component("v-button", CustomButton);
 Vue.component("v-dropdown", CustomDropdown);
+Vue.component("v-radio", CustomRadio);
 
 Vue.config.productionTip = false;
 axios.defaults.withCredentials = true;
+
+/* 路由发生变化修改页面title */
+router.beforeEach((to, from, next) => {
+  document.title = to.meta.title || "叶子照明";
+  next();
+});
 
 new Vue({
   router,

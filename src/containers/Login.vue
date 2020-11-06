@@ -47,10 +47,7 @@
       </div>
       <div v-if="isLoginMode" class="message">未注册的用户登录成功及为注册</div>
       <div class="accept-wrap">
-        <span v-if="accept" class="circle accept" @click="accept = !accept"
-          ><i class="el-icon-check"></i
-        ></span>
-        <span v-else class="circle" @click="accept = !accept"></span>
+        <v-radio :ckecked="accept" @on-click="accept = !accept" />
         <span>同意</span>
         <a href="https://www.baidu.com/" target="_blank">《叶子照明》</a>
         <span>用户协议</span>
@@ -277,24 +274,6 @@ export default {
     font-size: 0.75rem;
     font-family: PingFang, PingFang-SC;
     color: #999999;
-    .circle {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-right: 0.625rem;
-      border-radius: 100%;
-      font-weight: bold;
-      font-size: 1rem;
-      width: 1rem;
-      height: 1rem;
-      background: #ffffff;
-      border: 0.0625rem solid #d4d4d4;
-      &.accept {
-        border: none;
-        background: #99c901;
-        color: #ffffff;
-      }
-    }
     a {
       color: #99c901;
     }
