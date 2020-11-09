@@ -1,8 +1,8 @@
 <template>
-  <div v-if="visible" class="custom-dropdown">
-    <div class="dropdown-modal">
+  <div v-if="visible" class="custom-dialog">
+    <div class="dialog-modal">
       <slot />
-      <div v-if="cancelText || confirmText" class="dropdown-actions">
+      <div v-if="cancelText || confirmText" class="dialog-actions">
         <v-button
           v-if="cancelText"
           :text="cancelText"
@@ -61,7 +61,7 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
-.custom-dropdown {
+.custom-dialog {
   z-index: 99;
   position: fixed;
   top: 0;
@@ -72,12 +72,13 @@ export default {
   align-items: center;
   justify-content: center;
   background: rgba($color: #000000, $alpha: 0.5);
-  .dropdown-modal {
+  padding: 0 2.25rem;
+  .dialog-modal {
     position: relative;
     background: #ffffff;
     border-radius: 0.5rem;
     padding: 2rem 1.5rem 1.25rem;
-    .dropdown-actions {
+    .dialog-actions {
       display: flex;
       /deep/ .custom-button {
         min-width: 6.25rem;

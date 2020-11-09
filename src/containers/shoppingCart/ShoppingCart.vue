@@ -172,7 +172,7 @@ export default {
     position: fixed;
     left: 0;
     bottom: 0;
-    z-index: 99;
+    z-index: 10;
     width: 100%;
     height: 3.125rem;
     background-color: #ffffff;

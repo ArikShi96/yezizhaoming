@@ -5,6 +5,7 @@ import router from "./router/router";
 // element-ui
 import element from "element-ui";
 import "element-ui/lib/theme-chalk/index.css";
+import "./assets/css/override.scss";
 // axios
 import axios from "axios";
 // vue-draggable-resizable-rotatable
@@ -12,7 +13,7 @@ import VueDraggableResizableRotatable from "vue-draggable-resizable-rotatable";
 // custom component
 import CustomAlert from "@/components/common/CustomAlert.vue";
 import CustomButton from "@/components/common/CustomButton.vue";
-import CustomDropdown from "@/components/common/CustomDropdown.vue";
+import CustomDialog from "@/components/common/CustomDialog.vue";
 import CustomRadio from "@/components/common/CustomRadio.vue";
 
 Vue.use(VueDraggableResizableRotatable);
@@ -24,7 +25,7 @@ Vue.component(
 );
 Vue.component("v-alert", CustomAlert);
 Vue.component("v-button", CustomButton);
-Vue.component("v-dropdown", CustomDropdown);
+Vue.component("v-dialog", CustomDialog);
 Vue.component("v-radio", CustomRadio);
 
 Vue.config.productionTip = false;

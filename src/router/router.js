@@ -32,6 +32,17 @@ export default new VueRouter({
         title: "叶子照明",
       },
     },
+    // 创作
+    {
+      path: "/create",
+      name: "create",
+      component: () => {
+        return import("../containers/Create");
+      },
+      meta: {
+        title: "创作作品",
+      },
+    },
     // 我的作品
     {
       path: "/work-list",

@@ -51,7 +51,9 @@ export default {
       this.swipers = [BgImg, BgImg2];
     },
     // 跳转
-    navigateCreate() {},
+    navigateCreate() {
+      this.$router.push({ path: "/create" });
+    },
     navigateWorkList() {
       this.$router.push({ name: "WorkList" });
     },
@@ -71,7 +73,7 @@ export default {
     width: 100%;
     left: 0;
     bottom: 1.75rem;
-    z-index: 99;
+    z-index: 10;
     /deep/ .custom-button {
       width: 7.5rem;
       margin: 0 1rem;

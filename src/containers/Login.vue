@@ -47,7 +47,11 @@
       </div>
       <div v-if="isLoginMode" class="message">未注册的用户登录成功及为注册</div>
       <div class="accept-wrap">
-        <v-radio :ckecked="accept" @on-click="accept = !accept" />
+        <v-radio
+          class="accept-radio"
+          :checked="accept"
+          @on-click="accept = !accept"
+        />
         <span>同意</span>
         <a href="https://www.baidu.com/" target="_blank">《叶子照明》</a>
         <span>用户协议</span>
@@ -274,6 +278,9 @@ export default {
     font-size: 0.75rem;
     font-family: PingFang, PingFang-SC;
     color: #999999;
+    .accept-radio {
+      margin-right: 0.25rem;
+    }
     a {
       color: #99c901;
     }

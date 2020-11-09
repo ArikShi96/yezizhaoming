@@ -56,7 +56,7 @@ export default {
     width: 100%;
     left: 0;
     bottom: 7.5rem;
-    z-index: 99;
+    z-index: 10;
     /deep/ .custom-button {
       width: 7.5rem;
       margin: 0 1rem;
