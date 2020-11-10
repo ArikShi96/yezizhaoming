@@ -1,18 +1,9 @@
 <template>
-  <div class="hello-world">
+  <div class="image-swiper">
     <transition name="fade">
-      <swiper id="swiperBox" v-bind:options="swiperOption" ref="mySwiper">
-        <!-- 第一页 -->
-        <swiper-slide class="swiper-slide1">
-          <swiper-list></swiper-list>
-        </swiper-slide>
-        <!-- 第二页 -->
-        <swiper-slide class="swiper-slide2">
-          <swiper-list :test="true"></swiper-list>
-        </swiper-slide>
-        <!-- 第三页 -->
-        <swiper-slide class="swiper-slide3">
-          <swiper-list></swiper-list>
+      <swiper id="swiperBox" :options="swiperOption" ref="swiperList">
+        <swiper-slide v-for="(item, index) in imagesList" :key="index">
+          <swiper-list :images="item.images"></swiper-list>
         </swiper-slide>
       </swiper>
     </transition>
@@ -28,6 +19,11 @@ export default {
     Swiper,
     SwiperSlide,
     SwiperList,
+  },
+  props: {
+    imagesList: {
+      type: Array,
+    },
   },
   data() {
     return {
@@ -50,16 +46,10 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-.swiper-wrapper {
-  height: 6.25rem;
+#swiperBox {
+  height: 100%;
 }
-.swiper-slide1 {
-  background: skyblue;
-}
-.swiper-slide2 {
-  background: yellowgreen;
-}
-.swiper-slide3 {
-  background: blanchedalmond;
+/deep/ .swiper-wrapper {
+  height: calc(100vh - 4.5rem) !important;
 }
 </style>

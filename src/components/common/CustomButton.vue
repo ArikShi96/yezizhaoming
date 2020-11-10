@@ -79,6 +79,10 @@ export default {
     border: 0.0625rem solid #ededed;
     color: #666666;
   }
+  &.gray {
+    background: #bebebe;
+    color: #ffffff;
+  }
   /deep/ .el-loading-spinner {
     margin-top: -0.625rem;
     .el-icon-loading {

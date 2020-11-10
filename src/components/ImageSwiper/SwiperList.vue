@@ -1,30 +1,9 @@
 <template>
-  <div class="hello-world">
+  <div class="image-swiper-col">
     <transition name="fade">
-      <swiper id="swiperBox" v-bind:options="swiperOption" ref="mySwiper">
-        <!-- 第一页 -->
-        <swiper-slide class="swiper-slide1">
-          <div class="page">
-            <h3>第一页</h3>
-          </div>
-        </swiper-slide>
-        <!-- 第二页 -->
-        <swiper-slide class="swiper-slide2">
-          <div class="page">
-            <h3>第二页</h3>
-          </div>
-        </swiper-slide>
-        <!-- 第三页 -->
-        <swiper-slide class="swiper-slide3">
-          <div class="page">
-            <h3>第三页</h3>
-          </div>
-        </swiper-slide>
-        <!-- 第三页 -->
-        <swiper-slide v-if="test" class="swiper-slide3">
-          <div class="page">
-            <h3>第4页</h3>
-          </div>
+      <swiper :options="swiperOption" ref="swiper">
+        <swiper-slide v-for="(image, index) in images" :key="index">
+          <img class="image-swiper" :src="image" alt="" />
         </swiper-slide>
       </swiper>
     </transition>
@@ -40,8 +19,8 @@ export default {
     SwiperSlide,
   },
   props: {
-    test: {
-      type: Boolean,
+    images: {
+      type: Array,
     },
   },
   data() {
@@ -65,16 +44,9 @@ export default {
 .fade-leave-to {
   opacity: 0;
 }
-.swiper-wrapper {
-  height: 6.25rem;
-}
-.swiper-slide1 {
-  background: skyblue;
-}
-.swiper-slide2 {
-  background: yellowgreen;
-}
-.swiper-slide3 {
-  background: blanchedalmond;
+.image-swiper {
+  width: 100%;
+  height: calc(100vh - 4.5rem) !important;
+  object-fit: cover;
 }
 </style>
