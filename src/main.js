@@ -20,7 +20,7 @@ Vue.use(VueDraggableResizableRotatable);
 Vue.use(element);
 
 Vue.component(
-  "vue-draggable-resizable-rotatable",
+  "v-draggable-resizable-rotatable",
   VueDraggableResizableRotatable
 );
 Vue.component("v-alert", CustomAlert);

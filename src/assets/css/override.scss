@@ -69,3 +69,34 @@
     outline: none;
   }
 }
+// draggable
+.vdrr {
+  &.active:before {
+    border: none !important;
+  }
+  &.active {
+    border: 0.125rem solid #ffffff;
+  }
+  .handle {
+    border: none;
+  }
+  .handle-rot:before {
+    border-left: 0;
+  }
+  .handle:not(.handle-br):not(.handle-rot) {
+    display: none !important;
+  }
+  .handle.handle-br,
+  .handle.handle-rot {
+    background-size: 100%;
+    width: 1.25rem;
+    height: 1.25rem;
+    border-radius: 100%;
+  }
+  .handle.handle-br {
+    background-image: url("../image/common/draggable/resize.png");
+  }
+  .handle.handle-rot {
+    background-image: url("../image/common/draggable/refresh.png");
+  }
+}

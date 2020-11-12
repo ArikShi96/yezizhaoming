@@ -15,7 +15,7 @@ export default new VueRouter({
       path: "/login",
       name: "login",
       component: () => {
-        return import("../containers/Login");
+        return import("@/containers/Login");
       },
       meta: {
         title: "叶子照明",
@@ -26,7 +26,7 @@ export default new VueRouter({
       path: "/",
       name: "home",
       component: () => {
-        return import("../containers/Home");
+        return import("@/containers/Home");
       },
       meta: {
         title: "叶子照明",
@@ -37,7 +37,7 @@ export default new VueRouter({
       path: "/create",
       name: "create",
       component: () => {
-        return import("../containers/Create");
+        return import("@/containers/Create");
       },
       meta: {
         title: "创作作品",
@@ -48,7 +48,7 @@ export default new VueRouter({
       path: "/work-list",
       name: "WorkList",
       component: () => {
-        return import("../containers/work/WorkList");
+        return import("@/containers/work/WorkList");
       },
       meta: {
         title: "我的作品",
@@ -58,7 +58,7 @@ export default new VueRouter({
       path: "/work-preview/:id",
       name: "WorkPreview",
       component: () => {
-        return import("../containers/work/WorkPreview");
+        return import("@/containers/work/WorkPreview");
       },
       meta: {
         title: "作品预览",
@@ -68,10 +68,20 @@ export default new VueRouter({
       path: "/work-detail/:id",
       name: "WorkList",
       component: () => {
-        return import("../containers/work/WorkDetail");
+        return import("@/containers/work/WorkDetail");
       },
       meta: {
         title: "作品详情",
+      },
+    },
+    {
+      path: "/work-form/:id",
+      name: "WorkItemForm",
+      component: () => {
+        return import("@/containers/work/WorkForm.vue");
+      },
+      meta: {
+        title: "填写表单",
       },
     },
     // 购物车
@@ -79,7 +89,7 @@ export default new VueRouter({
       path: "/shopping-cart",
       name: "ShoppingCart",
       component: () => {
-        return import("../containers/shoppingCart/ShoppingCart");
+        return import("@/containers/shoppingCart/ShoppingCart");
       },
       meta: {
         title: "购物车",

@@ -1,5 +1,14 @@
 <template>
-  <div class="create-work" :style="{ backgroundImage: 'url(' + BgImg + ')' }">
+  <div
+    v-if="visible"
+    class="create-work"
+    :style="{ backgroundImage: 'url(' + BgImg + ')' }"
+  >
+    <!-- 所有编辑部件 -->
+    <div class="drag-list">
+      <dragable-item :img="BgImg"></dragable-item>
+    </div>
+    <!-- 底部弹出 -->
     <div class="expand-wrap">
       <div class="expand-icon-wrap" :class="{ visible: expand }">
         <div class="expand-icon" @click="expand = !expand">
@@ -9,6 +18,10 @@
       </div>
       <div class="scroll-list" :class="{ visible: expand }">
         <div class="scroll-tabs">
+          <div class="scroll-tab more">
+            <span>更多</span>
+            <span class="new-tag">New</span>
+          </div>
           <div
             v-for="(tab, index) in allItems"
             :key="index"
@@ -32,6 +45,7 @@
         </div>
       </div>
     </div>
+    <!-- 操作 -->
     <div class="create-work-actions">
       <v-button text="取消" type="gray"></v-button>
       <v-button text="完成" type="primary"></v-button>
@@ -39,8 +53,17 @@
   </div>
 </template>
 <script>
+import DragableItem from "@/components/create/dragable/index.vue";
 import BgImg from "@/assets/image/test/bg.jpg";
 export default {
+  components: {
+    DragableItem,
+  },
+  props: {
+    visible: {
+      type: Boolean,
+    },
+  },
   data() {
     return {
       expand: false,
@@ -203,6 +226,31 @@ export default {
           color: #e2e2e2;
           &.selected {
             color: #99c901;
+          }
+          &.more {
+            position: relative;
+            font-size: 0.75rem;
+            font-family: PingFangSC, PingFangSC-Heavy;
+            font-weight: 800;
+            color: #ffffff;
+            background: #99c901;
+            padding-right: 1.25rem;
+            .new-tag {
+              position: absolute;
+              top: 0.125rem;
+              right: 0.125rem;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+              width: 1.25rem;
+              height: 0.625rem;
+              background: #ffffff;
+              border-radius: 0.375rem;
+              font-size: 0.4375rem;
+              font-family: PingFangSC, PingFangSC-Heavy;
+              font-weight: 800;
+              color: #99c901;
+            }
           }
         }
       }

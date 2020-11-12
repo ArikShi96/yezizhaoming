@@ -65,9 +65,9 @@
 </template>
 <script>
 import ArrowIcon from "@/assets/image/common/arrow.png";
-import ShareIcon from "@/assets/image/common/share.png";
-import FetchIcon from "@/assets/image/common/fetch3d.png";
-import ShoppingIcon from "@/assets/image/common/shopping.png";
+import ShareIcon from "@/assets/image/common/work/share.png";
+import FetchIcon from "@/assets/image/common/work/3D.png";
+import ShoppingIcon from "@/assets/image/common/work/cart.png";
 export default {
   props: {
     item: {

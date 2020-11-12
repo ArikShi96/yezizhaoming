@@ -32,7 +32,7 @@
       </div>
     </div>
     <div class="customer-icon-wrap">
-      <img class="customer-icon" :src="CustomerIcon" alt="" />
+      <img class="customer-icon" :src="ServiceIcon" alt="" />
       <span>客服</span>
     </div>
     <div class="checkout-wrap">
@@ -55,12 +55,12 @@
 </template>
 <script>
 import ArrowIcon from "@/assets/image/common/arrow.png";
-import CustomerIcon from "@/assets/image/common/customer.png";
+import ServiceIcon from "@/assets/image/common/shopping/service.png";
 export default {
   data() {
     return {
       ArrowIcon,
-      CustomerIcon,
+      ServiceIcon,
       carts: [{ items: [{}] }, { items: [{}] }],
       editMode: false,
       checkoutAll: false,

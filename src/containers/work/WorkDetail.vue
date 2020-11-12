@@ -13,17 +13,27 @@
         @onClick="navigateWorkList"
       ></v-button>
     </div>
+    <!-- 提示框 -->
+    <fetch-tip-dialog :visible="showFetchTipDialog"></fetch-tip-dialog>
+    <!-- 分享弹框 -->
+    <work-share-dialog :visible="showWorkShareDialog"></work-share-dialog>
   </div>
 </template>
 <script>
+import WorkShareDialog from "@/components/work/WorkShareDialog.vue";
+import FetchTipDialog from "@/components/work/FetchTipDialog.vue";
 import WorkItem from "@/components/work/WorkItem.vue";
 export default {
   components: {
+    WorkShareDialog,
     WorkItem,
+    FetchTipDialog,
   },
   data() {
     return {
       workItem: {},
+      showFetchTipDialog: false,
+      showWorkShareDialog: true,
     };
   },
   mounted() {
