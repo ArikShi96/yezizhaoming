@@ -13,6 +13,7 @@
   </v-dialog>
 </template>
 <script>
+import store from "@/utils/store.js";
 export default {
   props: {
     visible: {
@@ -26,7 +27,12 @@ export default {
   },
   methods: {
     handleConfirm() {
-      this.$emit("input-work-name", this.workName);
+      if (!this.workName) {
+        this.$alert("请输入作品名称");
+        return;
+      }
+      this.$emit("input-work-name");
+      store.setWorkName(this.workName);
       this.workName = "";
     },
   },

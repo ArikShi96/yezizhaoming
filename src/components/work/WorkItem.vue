@@ -22,15 +22,15 @@
           <div class="price">¥345.00</div>
         </div>
         <div class="actions">
-          <div class="action action-buy">
+          <div class="action action-buy" @click="navigateShoppingCard">
             <img class="icon" :src="ShoppingIcon" />
             <span>购买</span>
           </div>
-          <div class="action action-fetch">
+          <div class="action action-fetch" @click="showFetchTipDialog = true">
             <img class="icon" :src="FetchIcon" />
             <span>获取3D图纸</span>
           </div>
-          <div class="action action-share">
+          <div class="action action-share" @click="showWorkShareDialog = true">
             <img class="icon" :src="ShareIcon" />
             <span>分享海报</span>
           </div>
@@ -61,6 +61,17 @@
         </div>
       </div>
     </div>
+    <!-- 提示框 -->
+    <fetch-tip-dialog
+      :visible="showFetchTipDialog"
+      @confirm="navigateWorkForm"
+      @cancel="showFetchTipDialog = false"
+    ></fetch-tip-dialog>
+    <!-- 分享弹框 -->
+    <work-share-dialog
+      :visible="showWorkShareDialog"
+      @cancel="showWorkShareDialog = false"
+    ></work-share-dialog>
   </div>
 </template>
 <script>
@@ -68,7 +79,13 @@ import ArrowIcon from "@/assets/image/common/arrow.png";
 import ShareIcon from "@/assets/image/common/work/share.png";
 import FetchIcon from "@/assets/image/common/work/3D.png";
 import ShoppingIcon from "@/assets/image/common/work/cart.png";
+import WorkShareDialog from "@/components/work/WorkShareDialog.vue";
+import FetchTipDialog from "@/components/work/FetchTipDialog.vue";
 export default {
+  components: {
+    WorkShareDialog,
+    FetchTipDialog,
+  },
   props: {
     item: {
       type: Object,
@@ -80,6 +97,8 @@ export default {
       ShareIcon,
       FetchIcon,
       ShoppingIcon,
+      showFetchTipDialog: false,
+      showWorkShareDialog: false,
       expand: false,
       kinds: [{ items: [{}] }, { items: [{}] }],
     };
@@ -91,6 +110,12 @@ export default {
     },
     expandSecondary(index) {
       this.$set(this.kinds[index], "expand", !this.kinds[index].expand);
+    },
+    navigateWorkForm() {
+      this.$router.push({ path: `/work-form/${this.$route.params.id}` });
+    },
+    navigateShoppingCard() {
+      this.$router.push({ path: `/shopping-cart/${this.$route.params.id}` });
     },
   },
 };

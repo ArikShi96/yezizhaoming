@@ -1,16 +1,22 @@
 <template>
   <div v-if="visible" class="system-image-preview">
-    <div v-if="showWizard" class="shadow-wizard"></div>
-    <image-swiper class="preview-image" :imagesList="imagesList" />
+    <img class="back-icon" :src="BackIcon" alt="" @click="backList" />
+    <div v-if="showWizard" class="shadow-wizard">
+      <img class="wizard-img" :src="WizardImg" alt="" />
+    </div>
+    <image-swiper ref="swiper" class="preview-image" :imagesList="imagesList" />
     <div class="next-step">
-      <v-button text="立即使用" type="primary"></v-button>
+      <v-button text="立即使用" type="primary" @onClick="confirm"></v-button>
     </div>
   </div>
 </template>
 <script>
 import ImageSwiper from "@/components/ImageSwiper/index.vue";
+import WizardImg from "@/assets/image/common/slide.png";
+import BackIcon from "@/assets/image/common/back.png";
 import BgImg from "@/assets/image/test/bg.jpg";
 import BgImg2 from "@/assets/image/test/bg2.png";
+import store from "@/utils/store.js";
 export default {
   components: {
     ImageSwiper,
@@ -19,19 +25,28 @@ export default {
     visible: {
       type: Boolean,
     },
-    showWizard: {
-      type: Boolean,
+    currentImageId: {
+      type: String,
     },
   },
   data() {
     return {
+      showWizard: false,
+      loading: false,
+      WizardImg,
+      BackIcon,
       BgImg,
       BgImg2,
       imagesList: [{ images: [] }],
     };
   },
-  mounted() {
-    this.fetchImagesList();
+  watch: {
+    visible() {
+      if (this.visible) {
+        this.showWizard = store.getIsNewComer() === "true";
+        this.fetchImagesList();
+      }
+    },
   },
   methods: {
     async fetchImagesList() {
@@ -41,6 +56,12 @@ export default {
         { images: [BgImg, BgImg2] },
       ];
     },
+    backList() {
+      this.$emit("cancel");
+    },
+    confirm() {
+      this.$emit("confirm");
+    },
   },
 };
 </script>
@@ -49,6 +70,14 @@ export default {
   height: 100vh;
   padding: 0.75rem 0.875rem;
   position: relative;
+  .back-icon {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 1.625rem;
+    height: 1.625rem;
+    z-index: 9;
+  }
   .shadow-wizard {
     position: fixed;
     top: 0;
@@ -58,6 +87,13 @@ export default {
     background-color: rgba($color: #000000, $alpha: 0.6);
     z-index: 10;
     pointer-events: none;
+    .wizard-img {
+      width: 9.375rem;
+      height: auto;
+      position: absolute;
+      top: 8.25rem;
+      left: 7rem;
+    }
   }
   .next-step {
     width: 100%;

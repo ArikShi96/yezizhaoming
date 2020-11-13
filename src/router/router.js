@@ -21,6 +21,26 @@ export default new VueRouter({
         title: "叶子照明",
       },
     },
+    {
+      path: "/login/bind-phone",
+      name: "bindPhone",
+      component: () => {
+        return import("@/containers/login/BindPhone");
+      },
+      meta: {
+        title: "叶子照明",
+      },
+    },
+    {
+      path: "/login/login-by-phone",
+      name: "loginByPhone",
+      component: () => {
+        return import("@/containers/login/LoginByPhone");
+      },
+      meta: {
+        title: "叶子照明",
+      },
+    },
     // 首页
     {
       path: "/",
@@ -66,7 +86,7 @@ export default new VueRouter({
     },
     {
       path: "/work-detail/:id",
-      name: "WorkList",
+      name: "WorkDetail",
       component: () => {
         return import("@/containers/work/WorkDetail");
       },
@@ -86,7 +106,7 @@ export default new VueRouter({
     },
     // 购物车
     {
-      path: "/shopping-cart",
+      path: "/shopping-cart/:id",
       name: "ShoppingCart",
       component: () => {
         return import("@/containers/shoppingCart/ShoppingCart");

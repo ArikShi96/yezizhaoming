@@ -1,5 +1,5 @@
 <template>
-  <div class="work-preview-page">
+  <div class="work-preview-page" v-loading="loading">
     <img class="preview-img" :src="BgImg" alt="" />
     <div class="preview-actions">
       <span class="action" @click="handleDelete">删除</span>
@@ -8,14 +8,27 @@
   </div>
 </template>
 <script>
+import { WORK_API } from "@/utils/api.js";
 import BgImg from "@/assets/image/test/bg2.png";
 export default {
   data() {
     return {
       BgImg,
+      workItem: {},
+      loading: false,
     };
   },
   methods: {
+    async fetchWorkDetail() {
+      try {
+        const res = await WORK_API.getDetail({ id: this.$route.params.id });
+        this.workItem = res.data || [];
+      } catch (err) {
+        this.$alert(err.message);
+      }
+      this.loading = false;
+    },
+    // 跳转
     handleDelete() {},
     handleEdit() {},
   },

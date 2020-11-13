@@ -2,14 +2,11 @@
   <v-dialog
     :visible="visible"
     cancelText="取消"
-    confirmText="立即获取"
+    confirmText="确定"
     @cancel="$emit('cancel')"
     @confirm="handleConfirm"
   >
-    <div class="dialog-title">温馨提示</div>
-    <div class="dialog-tip">
-      您搭配的配饰可以获取3D图纸哦～ 立即获取图纸吧？
-    </div>
+    <div class="dialog-title">确定要返回主页吗？未保存的操作将被清空</div>
   </v-dialog>
 </template>
 <script>
@@ -37,13 +34,5 @@ export default {
   text-align: center;
   color: #000000;
   margin-bottom: 1.25rem;
-}
-.dialog-tip {
-  margin: 0.625rem auto;
-  font-size: 0.875rem;
-  font-family: PingFangSC, PingFangSC-Regular;
-  text-align: center;
-  color: #333333;
-  line-height: 1.5rem;
 }
 </style>

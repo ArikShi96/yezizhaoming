@@ -1,31 +1,44 @@
 <template>
-  <el-tabs v-if="visible" tab-position="left" v-model="activeName">
-    <el-tab-pane
-      v-for="tab in allItems"
-      :key="tab.tab"
-      :label="tab.tab"
-      :name="tab.tab"
-    >
-      <div class="items-wrap">
-        <div class="items-title">
-          <span class="line"></span>
-          <span>{{ tab.tab }}</span>
-          <span class="line"></span>
-        </div>
-        <div class="item-list">
-          <div v-for="(item, index) in tab.items" :key="index" class="item">
-            <img class="item-image" :src="item.img" alt="" />
-            <div class="item-name">{{ item.name }}</div>
+  <div>
+    <el-tabs v-if="visible" tab-position="left" v-model="activeName">
+      <el-tab-pane
+        v-for="tab in allItems"
+        :key="tab.tab"
+        :label="tab.tab"
+        :name="tab.tab"
+      >
+        <div class="items-wrap">
+          <div class="items-title">
+            <span class="line"></span>
+            <span>{{ tab.tab }}</span>
+            <span class="line"></span>
           </div>
-          <div v-if="tab.items.length % 3 === 2" style="width: 3.75rem"></div>
+          <div class="item-list">
+            <div v-for="(item, index) in tab.items" :key="index" class="item">
+              <img class="item-image" :src="item.img" alt="" />
+              <div class="item-name">{{ item.name }}</div>
+            </div>
+            <div v-if="tab.items.length % 3 === 2" style="width: 3.75rem"></div>
+          </div>
         </div>
-      </div>
-    </el-tab-pane>
-  </el-tabs>
+      </el-tab-pane>
+    </el-tabs>
+    <!-- 配件弹窗 -->
+    <accessory-drawer
+      :visible="showAccessoryDrawer"
+      @cancel="showAccessoryDrawer = false"
+    ></accessory-drawer>
+  </div>
 </template>
 <script>
 import BgImg from "@/assets/image/test/bg.jpg";
+// 配件弹窗
+import AccessoryDrawer from "@/components/create/AccessoryDrawer.vue";
 export default {
+  components: {
+    // 配件弹窗
+    AccessoryDrawer,
+  },
   props: {
     visible: {
       type: Boolean,
@@ -33,6 +46,7 @@ export default {
   },
   data() {
     return {
+      showAccessoryDrawer: false, // 配件弹窗
       BgImg,
       activeName: "",
       allItems: [],

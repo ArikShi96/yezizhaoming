@@ -24,7 +24,7 @@
         <span>您的手机号</span>
       </div>
       <el-input
-        v-model="formData.phone"
+        v-model="formData.mobile"
         placeholder="请填写您的手机号"
       ></el-input>
     </div>
@@ -40,7 +40,10 @@
     </div>
     <div class="input-wrap">
       <div class="label">您的职业</div>
-      <el-input v-model="formData.job" placeholder="请填写您的职业"></el-input>
+      <el-input
+        v-model="formData.occupation"
+        placeholder="请填写您的职业"
+      ></el-input>
     </div>
     <div class="input-wrap">
       <div class="label">您的地址</div>
@@ -53,6 +56,7 @@
       class="confirm-button"
       text="立即获取3D图纸"
       type="primary"
+      @onClick="confirm"
     ></v-button>
     <div class="hint-message">
       *姓名、手机号、邮箱为必填项，填写完整才可提交哦
@@ -60,6 +64,7 @@
   </div>
 </template>
 <script>
+import { WORK_API } from "@/utils/api.js";
 import DocumentIcon from "@/assets/image/common/document.png";
 export default {
   data() {
@@ -67,6 +72,27 @@ export default {
       DocumentIcon,
       formData: {},
     };
+  },
+  methods: {
+    async confirm() {
+      const { name, mobile, email, occupation, address } = this.formData;
+      try {
+        if (!name || !mobile || !email) {
+          throw Error("信息不完整，请填写完整信息～");
+        }
+        await WORK_API.getDrawing({
+          id: this.$route.params.id,
+          name,
+          mobile,
+          email,
+          occupation,
+          address,
+        });
+        this.$emit("confirm");
+      } catch (err) {
+        this.$alert(err.message);
+      }
+    },
   },
 };
 </script>

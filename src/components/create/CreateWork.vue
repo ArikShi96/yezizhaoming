@@ -2,11 +2,27 @@
   <div
     v-if="visible"
     class="create-work"
-    :style="{ backgroundImage: 'url(' + BgImg + ')' }"
+    :style="{ backgroundImage: 'url(' + formData.backgroundImage + ')' }"
   >
+    <!-- 操作按钮 -->
+    <img class="back-icon" :src="BackIcon" alt="" />
+    <div class="add-type">
+      <img class="icon" :src="AddIcon" alt="" /> 添加灯型
+    </div>
+    <div class="switch-theme">
+      <img class="icon" :src="RefreshIcon" alt="" /> 切换场景
+    </div>
     <!-- 所有编辑部件 -->
     <div class="drag-list">
-      <dragable-item :img="BgImg"></dragable-item>
+      <dragable-item
+        v-for="(item, index) in formData.list"
+        :key="index"
+        :img="item.img"
+        :index="index"
+        @on-delete="handleDelete"
+        @on-lock="handleLock"
+        @on-add="handleAdd"
+      ></dragable-item>
     </div>
     <!-- 底部弹出 -->
     <div class="expand-wrap">
@@ -50,14 +66,26 @@
       <v-button text="取消" type="gray"></v-button>
       <v-button text="完成" type="primary"></v-button>
     </div>
+    <!-- 配件弹窗 -->
+    <accessory-drawer
+      :visible="showAccessoryDrawer"
+      @cancel="showAccessoryDrawer = false"
+    ></accessory-drawer>
   </div>
 </template>
 <script>
 import DragableItem from "@/components/create/dragable/index.vue";
 import BgImg from "@/assets/image/test/bg.jpg";
+import AddIcon from "@/assets/image/common/add.png";
+import BackIcon from "@/assets/image/common/back.png";
+import RefreshIcon from "@/assets/image/common/refresh.png";
+// 配件弹窗
+import AccessoryDrawer from "@/components/create/AccessoryDrawer.vue";
 export default {
   components: {
     DragableItem,
+    // 配件弹窗
+    AccessoryDrawer,
   },
   props: {
     visible: {
@@ -66,9 +94,18 @@ export default {
   },
   data() {
     return {
+      showAccessoryDrawer: false, // 配件弹窗
       expand: false,
+      AddIcon,
+      BackIcon,
+      RefreshIcon,
       BgImg,
       allItems: [],
+      // 创作内容
+      formData: {
+        backgroundImage: BgImg,
+        list: [{ img: BgImg }],
+      },
     };
   },
   computed: {
@@ -88,6 +125,24 @@ export default {
     this.fetchAllItems();
   },
   methods: {
+    // 列表操作
+    handleAdd(index) {
+      this.$set(this.formData, "list", [
+        ...this.formData.list,
+        this.formData.list[index],
+      ]);
+    },
+    handleDelete(index) {
+      this.formData.list.splice(index, 1);
+    },
+    handleLock(index) {
+      this.$set(
+        this.formData.list[index],
+        "locked",
+        !this.formData.list[index].locked
+      );
+    },
+    // 更多选择
     fetchAllItems() {
       this.allItems = [
         {
@@ -170,6 +225,42 @@ export default {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
+  .back-icon {
+    position: absolute;
+    top: 1rem;
+    left: 1rem;
+    width: 1.625rem;
+    height: 1.625rem;
+    z-index: 9;
+  }
+  .add-type,
+  .switch-theme {
+    z-index: 9;
+    position: absolute;
+    right: 0.375rem;
+    display: flex;
+    align-items: center;
+    position: absolute;
+    background: rgba(255, 255, 255, 0.5);
+    border-radius: 0.75rem;
+    padding: 0.25rem 0.375rem;
+    font-size: 0.75rem;
+    font-family: PingFangSC, PingFangSC-Medium;
+    color: #333333;
+    line-height: 1.0625rem;
+    letter-spacing: 0rem;
+    .icon {
+      width: 0.6875rem;
+      height: auto;
+      margin-right: 0.125rem;
+    }
+  }
+  .add-type {
+    top: 0.625rem;
+  }
+  .switch-theme {
+    top: 2.75rem;
+  }
   .expand-wrap {
     .expand-icon-wrap {
       position: fixed;

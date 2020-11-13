@@ -1,5 +1,5 @@
 <template>
-  <div class="shopping-cart-page">
+  <div class="shopping-cart-page" v-loading="loading">
     <div class="mode-wrap" @click="editMode = !editMode">
       {{ editMode ? "完成" : "管理" }}
     </div>
@@ -54,6 +54,7 @@
   </div>
 </template>
 <script>
+import { WORK_API } from "@/utils/api.js";
 import ArrowIcon from "@/assets/image/common/arrow.png";
 import ServiceIcon from "@/assets/image/common/shopping/service.png";
 export default {
@@ -65,16 +66,29 @@ export default {
       editMode: false,
       checkoutAll: false,
       totalPrice: "10.00",
+      loading: false,
     };
   },
   watch: {
     checkoutAll() {},
   },
+  mounted() {
+    this.fetchWorkDetail();
+  },
   methods: {
+    async fetchWorkDetail() {
+      try {
+        const res = await WORK_API.getDetail({ id: this.$route.params.id });
+        this.workItem = res.data || [];
+      } catch (err) {
+        this.$alert(err.message);
+      }
+      this.loading = false;
+    },
     expandCart(index) {
       this.$set(this.carts[index], "expand", !this.carts[index].expand);
     },
-    // 删除||结算
+    // 删除 || 结算
     submitList() {},
   },
 };

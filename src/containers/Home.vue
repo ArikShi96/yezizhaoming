@@ -1,6 +1,11 @@
 <template>
   <div class="home-page">
-    <swiper id="swiperBox" :options="swiperOption" ref="swiper">
+    <swiper
+      id="swiperBox"
+      :options="swiperOption"
+      ref="swiper"
+      v-loading="loading"
+    >
       <swiper-slide
         v-for="(swiper, index) in swipers"
         :key="index"
@@ -24,6 +29,7 @@
   </div>
 </template>
 <script>
+import { HOME_API } from "@/utils/api.js";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 import SwiperOption from "@/utils/swiperOption.js";
@@ -40,6 +46,7 @@ export default {
       BgImg2,
       swiperOption: { ...SwiperOption },
       swipers: [],
+      loading: false,
     };
   },
   mounted() {
@@ -48,7 +55,14 @@ export default {
   methods: {
     // 获取轮播图
     async fetchSwiperList() {
-      this.swipers = [BgImg, BgImg2];
+      this.loading = true;
+      try {
+        const res = await HOME_API.banners({});
+        this.swipers = res.data || [];
+      } catch (err) {
+        this.$alert(err.message);
+      }
+      this.loading = false;
     },
     // 跳转
     navigateCreate() {

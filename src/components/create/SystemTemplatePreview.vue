@@ -2,8 +2,8 @@
   <div v-if="visible" class="system-template-preview">
     <img class="preview-image" :src="BgImg" alt="" />
     <div class="preview-actions">
-      <div class="preview-action">重新选择</div>
-      <div class="preview-action">立即使用</div>
+      <div class="preview-action" @click="backList">重新选择</div>
+      <div class="preview-action" @click="confirm">立即使用</div>
     </div>
   </div>
 </template>
@@ -14,11 +14,32 @@ export default {
     visible: {
       type: Boolean,
     },
+    currentTemplateId: {
+      type: String,
+    },
   },
   data() {
     return {
+      template: "",
+      loading: false,
       BgImg,
     };
+  },
+  watch: {
+    visible() {
+      if (this.visible && !this.template) {
+        this.fetchTemplateDetail();
+      }
+    },
+  },
+  methods: {
+    async fetchTemplateDetail() {},
+    backList() {
+      this.$emit("cancel");
+    },
+    async confirm() {
+      this.$emit("confirm", this.template);
+    },
   },
 };
 </script>

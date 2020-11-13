@@ -3,15 +3,24 @@
     <div class="dialog-title">请选择一个场景</div>
     <div class="dialog-content">
       <div class="image-type-list">
-        <div class="image-type" @click="handleTypeClick(0)">拍摄照片</div>
-        <div class="image-type" @click="handleTypeClick(1)">从相册选择</div>
-        <div class="image-type" @click="handleTypeClick(2)">系统图库</div>
-        <div class="image-type" @click="handleTypeClick(3)">模板选择</div>
+        <el-upload
+          ref="upload"
+          :on-change="handleFileChange"
+          :limit="1"
+          :auto-upload="false"
+          :show-file-list="false"
+          :action="''"
+        >
+          <div class="image-type">拍摄照片/从相册选择</div>
+        </el-upload>
+        <div class="image-type" @click="handleTypeClick(0)">系统图库</div>
+        <div class="image-type" @click="handleTypeClick(1)">模板选择</div>
       </div>
     </div>
   </v-dialog>
 </template>
 <script>
+import store from "@/utils/store.js";
 export default {
   props: {
     visible: {
@@ -20,7 +29,13 @@ export default {
   },
   methods: {
     handleTypeClick(type) {
-      this.$emit("on-type-click", type);
+      this.$emit("confirm", type);
+    },
+    async handleFileChange(file) {
+      // TODO
+      const type = 2;
+      store.setBackgroundImage({ type, file: file.name, id: "" });
+      this.$emit("confirm", type);
     },
   },
 };

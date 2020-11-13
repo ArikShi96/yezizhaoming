@@ -17,6 +17,7 @@
           :key="index"
           class="image-item"
           :src="image"
+          @click="viewImage(image)"
         />
       </div>
     </el-tab-pane>
@@ -35,20 +36,30 @@ export default {
     return {
       imageTabs: [],
       activeName: "",
+      loading: false,
     };
   },
-  mounted() {
-    this.fetchImageList();
+  watch: {
+    visible() {
+      if (this.visible && !this.imageTabs.length) {
+        this.fetchImageList();
+      }
+    },
   },
   methods: {
     async fetchImageList() {
+      this.loading = true;
       this.imageTabs = [
         { tab: "分类1", images: [BgImg, BgImg2, BgImg, BgImg2, BgImg, BgImg2] },
         { tab: "分类2", images: [BgImg, BgImg2, BgImg, BgImg2] },
       ];
       this.activeName = this.imageTabs.length ? this.imageTabs[0].tab : "";
+      this.loading = false;
     },
     handleClick() {},
+    viewImage(image) {
+      this.$emit("confirm", image);
+    },
   },
 };
 </script>

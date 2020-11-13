@@ -26,6 +26,7 @@
 </template>
 <script>
 import LoveIcon from "@/assets/image/common/loveIcon.png";
+import store from "@/utils/store.js";
 export default {
   props: {
     visible: {
@@ -58,6 +59,14 @@ export default {
       });
     },
     handleNextClick() {
+      const selected = this.items.find((item) => {
+        return item.selected;
+      });
+      if (!selected) {
+        this.$alert("请选择要创作的灯型");
+        return;
+      }
+      store.setSelectType(selected);
       this.$emit("on-next-click");
     },
   },

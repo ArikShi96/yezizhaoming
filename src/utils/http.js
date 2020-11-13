@@ -46,8 +46,8 @@ export const http = async (method, url, params, data, header) => {
       case "MULTI-PART": {
         const params = new FormData();
         if (data) {
-          params.append("json", JSON.stringify(data.json));
-          params.append("file", data.file);
+          params.append("client_id", "h5");
+          params.append("file", data.upload_file);
         }
         const config = {
           //添加请求头
@@ -70,7 +70,7 @@ export const http = async (method, url, params, data, header) => {
   if (response.status === 200) {
     return response.data;
   }
-  throw new Error(response.data.message);
+  throw new Error(response.data.message || response.statusText);
 };
 
 const encodeUrlWithParams = (url, params) => {
@@ -80,7 +80,7 @@ const encodeUrlWithParams = (url, params) => {
 
   Object.keys(params).forEach((key, index) => {
     url += `${index ? "" : "?"}`;
-    if (params[key]) {
+    if (params[key] || params[key] === 0) {
       url += `${index ? "&" : ""}${key}=${encodeURIComponent(params[key])}`;
     }
   });

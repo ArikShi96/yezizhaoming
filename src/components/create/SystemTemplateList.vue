@@ -5,7 +5,7 @@
       :key="index"
       class="template-item"
       :src="template"
-      @click="handleClick(index)"
+      @click="viewTemplate(template)"
     />
   </div>
 </template>
@@ -21,16 +21,23 @@ export default {
   data() {
     return {
       templates: [],
+      loading: false,
     };
   },
-  mounted() {
-    this.fetchTemplateList();
+  watch: {
+    visible() {
+      if (this.visible && !this.templates.length) {
+        this.fetchTemplateList();
+      }
+    },
   },
   methods: {
     async fetchTemplateList() {
       this.templates = [BgImg, BgImg2, BgImg, BgImg2, BgImg, BgImg2];
     },
-    handleClick() {},
+    viewTemplate(template) {
+      this.$emit("confirm", template);
+    },
   },
 };
 </script>

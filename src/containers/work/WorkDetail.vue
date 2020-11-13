@@ -1,5 +1,5 @@
 <template>
-  <div class="work-detail-page">
+  <div class="work-detail-page" v-loading="loading">
     <work-item :item="workItem" />
     <div class="work-detail-links">
       <v-button
@@ -13,27 +13,19 @@
         @onClick="navigateWorkList"
       ></v-button>
     </div>
-    <!-- 提示框 -->
-    <fetch-tip-dialog :visible="showFetchTipDialog"></fetch-tip-dialog>
-    <!-- 分享弹框 -->
-    <work-share-dialog :visible="showWorkShareDialog"></work-share-dialog>
   </div>
 </template>
 <script>
-import WorkShareDialog from "@/components/work/WorkShareDialog.vue";
-import FetchTipDialog from "@/components/work/FetchTipDialog.vue";
+import { WORK_API } from "@/utils/api.js";
 import WorkItem from "@/components/work/WorkItem.vue";
 export default {
   components: {
-    WorkShareDialog,
     WorkItem,
-    FetchTipDialog,
   },
   data() {
     return {
       workItem: {},
-      showFetchTipDialog: false,
-      showWorkShareDialog: true,
+      loading: false,
     };
   },
   mounted() {
@@ -41,7 +33,13 @@ export default {
   },
   methods: {
     async fetchWorkDetail() {
-      this.workItem = {};
+      try {
+        const res = await WORK_API.getDetail({ id: this.$route.params.id });
+        this.workItem = res.data || [];
+      } catch (err) {
+        this.$alert(err.message);
+      }
+      this.loading = false;
     },
     // 跳转
     navigateHome() {

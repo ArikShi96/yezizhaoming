@@ -4,7 +4,7 @@
       v-if="showSuccess"
       :visible="showSuccess"
     ></work-item-form-success>
-    <work-item-form v-else></work-item-form>
+    <work-item-form v-else @confirm="showSuccess = true"></work-item-form>
   </div>
 </template>
 <script>
