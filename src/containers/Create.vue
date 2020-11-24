@@ -35,9 +35,16 @@
       @input-work-name="inputWorkName"
     ></name-input-dialog>
     <!-- 选择灯型 -->
-    <type-select-list :visible="showTypeSelectList"></type-select-list>
+    <type-select-list
+      :visible="showTypeSelectList"
+      @on-next-click="chooseType"
+    ></type-select-list>
     <!-- 创作过程 -->
-    <create-work :visible="showCreateWork"></create-work>
+    <create-work
+      :visible="showCreateWork"
+      @back="backMoreSelect"
+      @add-more="addMoreSelect"
+    ></create-work>
     <!-- 更换背景图片 -->
     <image-select-dialog
       :visible="showImageSwitchDialog"
@@ -67,26 +74,26 @@
 <script>
 /* eslint-disable no-unused-vars */
 // 选择背景图片
-import ImageSelectDialog from "@/components/create/dialog/ImageSelectDialog.vue";
+import ImageSelectDialog from "@/containers/create/dialog/ImageSelectDialog.vue";
 // 系统图库/预览
-import SystemImageList from "@/components/create/SystemImageList.vue";
-import SystemImagePreview from "@/components/create/SystemImagePreview.vue";
+import SystemImageList from "@/containers/create/SystemImageList.vue";
+import SystemImagePreview from "@/containers/create/SystemImagePreview.vue";
 // 系统模板/预览
-import SystemTemplateList from "@/components/create/SystemTemplateList.vue";
-import SystemTemplatePreview from "@/components/create/SystemTemplatePreview.vue";
+import SystemTemplateList from "@/containers/create/SystemTemplateList.vue";
+import SystemTemplatePreview from "@/containers/create/SystemTemplatePreview.vue";
 // 输入作品名称
-import NameInputDialog from "@/components/create/dialog/NameInputDialog.vue";
+import NameInputDialog from "@/containers/create/dialog/NameInputDialog.vue";
 // 选择灯型
-import TypeSelectList from "@/components/create/TypeSelectList.vue";
+import TypeSelectList from "@/containers/create/TypeSelectList.vue";
 // 创作过程
-import CreateWork from "@/components/create/CreateWork.vue";
+import CreateWork from "@/containers/create/CreateWork.vue";
 // 更多选择
-import MoreSelection from "@/components/create/MoreSelection.vue";
+import MoreSelection from "@/containers/create/MoreSelection.vue";
 // 关注二维码
-import QrCodeDialog from "@/components/create/dialog/QrCodeDialog.vue";
-import CancelWorkDialog from "@/components/create/dialog/CancelWorkDialog.vue";
-import ConfirmWorkDialog from "@/components/create/dialog/ConfirmWorkDialog.vue";
-import BackWorkDialog from "@/components/create/dialog/BackWorkDialog.vue";
+import QrCodeDialog from "@/containers/create/dialog/QrCodeDialog.vue";
+import CancelWorkDialog from "@/containers/create/dialog/CancelWorkDialog.vue";
+import ConfirmWorkDialog from "@/containers/create/dialog/ConfirmWorkDialog.vue";
+import BackWorkDialog from "@/containers/create/dialog/BackWorkDialog.vue";
 import store from "@/utils/store.js";
 export default {
   components: {
@@ -215,7 +222,14 @@ export default {
       this.showCreateWork = true;
     },
     // 创作过程
-    addMoreSelect() {},
+    backMoreSelect() {
+      this.showTypeSelectList = true;
+      this.showCreateWork = false;
+    },
+    addMoreSelect() {
+      this.showTypeSelectList = true;
+      this.showCreateWork = false;
+    },
     switchBackground() {},
     // 更多选择
     chooseMoreSelect() {},

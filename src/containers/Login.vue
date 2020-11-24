@@ -43,9 +43,11 @@ export default {
         this.loading = true;
         const res = await AUTH_API.quickLogin({});
         store.setUserInfo(res.data || {});
-        if (res.has_bind_mobile) {
+        if (res.data.has_bind_mobile) {
+          this.$alert("登录成功");
           this.navigateHome();
         } else {
+          this.$alert("请先绑定手机号");
           this.$router.push({ path: "/login/bind-phone" });
         }
       } catch (err) {

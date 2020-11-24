@@ -1,12 +1,12 @@
 <template>
-  <div v-if="visible" class="type-select-list">
+  <div class="type-select-page" v-loading="loading">
     <div class="title">
       <img class="icon" :src="LoveIcon" alt="" />
       <span>选择您要创作的灯型</span>
     </div>
     <div class="select-list">
       <div
-        v-for="(item, index) in items"
+        v-for="(item, index) in items || []"
         :key="index"
         class="select-item"
         :class="{ selected: item.selected }"
@@ -19,7 +19,7 @@
       <v-button
         text="下一步"
         type="primary"
-        @on-click="handleNextClick"
+        @onClick="handleNextClick"
       ></v-button>
     </div>
   </div>
@@ -27,30 +27,25 @@
 <script>
 import LoveIcon from "@/assets/image/common/loveIcon.png";
 import store from "@/utils/store.js";
+import { CREATE_API } from "@/utils/api.js";
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-    },
-  },
   data() {
     return {
       LoveIcon,
-      items: [
-        { name: "吸顶灯" },
-        { name: "吸顶灯2" },
-        { name: "吸顶灯" },
-        { name: "吸顶灯2" },
-        { name: "吸顶灯" },
-        { name: "吸顶灯2" },
-        { name: "吸顶灯" },
-        { name: "吸顶灯2" },
-        { name: "吸顶灯" },
-        { name: "吸顶灯2" },
-      ],
+      items: "",
+      loading: false,
     };
   },
-  mounted() {},
+  async mounted() {
+    this.loading = true;
+    const res = await CREATE_API.categories({});
+    try {
+      this.items = res.data || [];
+    } catch (err) {
+      this.$alert(err.message);
+    }
+    this.loading = false;
+  },
   methods: {
     selectItem(selectedIndex) {
       this.items = this.items.map((item, index) => {
@@ -67,15 +62,15 @@ export default {
         return;
       }
       store.setSelectType(selected);
-      this.$emit("on-next-click");
+      this.$router.push({ path: "/create/work" });
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.type-select-list {
+.type-select-page {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   position: relative;
   padding: 2rem 1rem 4rem;
   .title {

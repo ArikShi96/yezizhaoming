@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" class="system-image-preview">
+  <div class="system-image-preview-page">
     <img class="back-icon" :src="BackIcon" alt="" @click="backList" />
     <div v-if="showWizard" class="shadow-wizard">
       <img class="wizard-img" :src="WizardImg" alt="" />
@@ -17,17 +17,10 @@ import BackIcon from "@/assets/image/common/back.png";
 import BgImg from "@/assets/image/test/bg.jpg";
 import BgImg2 from "@/assets/image/test/bg2.png";
 import store from "@/utils/store.js";
+// import { HOME_API } from "@/utils/api.js";
 export default {
   components: {
     ImageSwiper,
-  },
-  props: {
-    visible: {
-      type: Boolean,
-    },
-    currentImageId: {
-      type: String,
-    },
   },
   data() {
     return {
@@ -40,13 +33,9 @@ export default {
       imagesList: [{ images: [] }],
     };
   },
-  watch: {
-    visible() {
-      if (this.visible) {
-        this.showWizard = store.getIsNewComer() === "true";
-        this.fetchImagesList();
-      }
-    },
+  mounted() {
+    this.showWizard = store.getIsNewComer() === "true";
+    this.fetchImagesList();
   },
   methods: {
     async fetchImagesList() {
@@ -57,16 +46,16 @@ export default {
       ];
     },
     backList() {
-      this.$emit("cancel");
+      this.$router.go(-1);
     },
     confirm() {
-      this.$emit("confirm");
+      this.$router.push({ path: "/create/name-input" });
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.system-image-preview {
+.system-image-preview-page {
   height: 100vh;
   padding: 0.75rem 0.875rem;
   position: relative;

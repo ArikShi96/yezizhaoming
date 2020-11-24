@@ -1,5 +1,5 @@
 <template>
-  <div v-if="visible" class="system-template-preview">
+  <div class="system-template-preview-page">
     <img class="preview-image" :src="BgImg" alt="" />
     <div class="preview-actions">
       <div class="preview-action" @click="backList">重新选择</div>
@@ -10,14 +10,6 @@
 <script>
 import BgImg from "@/assets/image/test/bg.jpg";
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-    },
-    currentTemplateId: {
-      type: String,
-    },
-  },
   data() {
     return {
       template: "",
@@ -25,26 +17,22 @@ export default {
       BgImg,
     };
   },
-  watch: {
-    visible() {
-      if (this.visible && !this.template) {
-        this.fetchTemplateDetail();
-      }
-    },
+  mounted() {
+    this.fetchTemplateDetail();
   },
   methods: {
     async fetchTemplateDetail() {},
     backList() {
-      this.$emit("cancel");
+      this.$router.go(-1);
     },
     async confirm() {
-      this.$emit("confirm", this.template);
+      this.$router.push({ path: "/create/name-input" });
     },
   },
 };
 </script>
 <style lang="scss" scoped>
-.system-template-preview {
+.system-template-preview-page {
   height: 100vh;
   position: relative;
   .preview-image {

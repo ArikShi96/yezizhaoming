@@ -71,6 +71,18 @@
 }
 // draggable
 .vdrr {
+  border: 0.125rem solid #ffffff; // TODO
+  &.hide-rotate .handle.handle-rot {
+    display: none !important;
+  }
+  &.canvas {
+    border: none;
+    .action-icon,
+    .handle.handle-br,
+    .handle.handle-rot {
+      visibility: hidden;
+    }
+  }
   .handle {
     border: none;
     background: none;
@@ -95,11 +107,13 @@
     border-radius: 100%;
   }
   .handle.handle-br {
+    display: inline-block; // TODO
     background-image: url("../image/common/draggable/resize.png");
     bottom: -1rem;
     right: -1rem;
   }
   .handle.handle-rot {
+    display: inline-block; // TODO
     background-image: url("../image/common/draggable/refresh.png");
     top: -0.75rem;
   }
@@ -131,7 +145,7 @@
     border: none !important;
   }
   &.active {
-    border: 0.125rem solid #ffffff;
+    // border: 0.125rem solid #ffffff;
     .custom-draggble-img .action-icon {
       display: inline-block;
     }

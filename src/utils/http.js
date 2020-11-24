@@ -1,10 +1,12 @@
 import axios from "axios";
 import qs from "qs";
+import store from "@/utils/store.js";
 
 export const http = async (method, url, params, data, header) => {
   const headers = {
     Accept: "application/json",
     "Content-Type": "application/json",
+    Authorization: `Bearer ${store.getAccessToken()}`,
     ...header,
   };
   let response = {};
@@ -47,7 +49,7 @@ export const http = async (method, url, params, data, header) => {
         const params = new FormData();
         if (data) {
           params.append("client_id", "h5");
-          params.append("file", data.upload_file);
+          params.append("upload_file", data.upload_file);
         }
         const config = {
           //添加请求头
@@ -67,7 +69,7 @@ export const http = async (method, url, params, data, header) => {
     response = error.response;
   }
   // 请求成功
-  if (response.status === 200) {
+  if (response.status === 200 && response.data.status) {
     return response.data;
   }
   throw new Error(response.data.message || response.statusText);

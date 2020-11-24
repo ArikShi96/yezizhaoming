@@ -11,7 +11,7 @@
         :key="index"
         class="swiper-slide"
       >
-        <img class="swiper-image" :src="swiper" alt="" />
+        <img class="swiper-image" :src="`${HOST_NAME}/${swiper.img}`" alt="" />
       </swiper-slide>
     </swiper>
     <div class="home-links">
@@ -29,7 +29,7 @@
   </div>
 </template>
 <script>
-import { HOME_API } from "@/utils/api.js";
+import { HOME_API, HOST_NAME } from "@/utils/api.js";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 import SwiperOption from "@/utils/swiperOption.js";
@@ -42,6 +42,7 @@ export default {
   },
   data() {
     return {
+      HOST_NAME,
       BgImg,
       BgImg2,
       swiperOption: { ...SwiperOption },
@@ -66,7 +67,7 @@ export default {
     },
     // 跳转
     navigateCreate() {
-      this.$router.push({ path: "/create" });
+      this.$router.push({ path: "/create/image-select" });
     },
     navigateWorkList() {
       this.$router.push({ name: "WorkList" });
@@ -77,7 +78,7 @@ export default {
 <style lang="scss" scoped>
 .home-page {
   position: relative;
-  height: 100%;
+  height: 100vh;
   width: 100%;
   .home-links {
     display: flex;

@@ -1,6 +1,6 @@
 <template>
   <v-dialog
-    :visible="visible"
+    :visible="true"
     cancelText="取消"
     confirmText="确定"
     @cancel="$emit('cancel')"
@@ -15,11 +15,6 @@
 <script>
 import store from "@/utils/store.js";
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-    },
-  },
   data() {
     return {
       workName: "",

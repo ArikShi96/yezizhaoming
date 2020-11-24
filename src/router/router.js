@@ -52,17 +52,6 @@ export default new VueRouter({
         title: "叶子照明",
       },
     },
-    // 创作
-    {
-      path: "/create",
-      name: "create",
-      component: () => {
-        return import("@/containers/Create");
-      },
-      meta: {
-        title: "创作作品",
-      },
-    },
     // 我的作品
     {
       path: "/work-list",
@@ -113,6 +102,115 @@ export default new VueRouter({
       },
       meta: {
         title: "购物车",
+      },
+    },
+    /******* 创作 *********/
+    // 图片选择
+    {
+      path: "/create/image-select",
+      name: "ImageSelect",
+      component: () => {
+        return import("@/containers/create/ImageSelect");
+      },
+      meta: {
+        title: "创作作品",
+      },
+    },
+    // 输入名字
+    {
+      path: "/create/name-input",
+      name: "NameInput",
+      component: () => {
+        return import("@/containers/create/NameInput");
+      },
+      meta: {
+        title: "创作作品",
+      },
+    },
+    // 一级分类选择
+    {
+      path: "/create/type-select",
+      name: "TypeSelectList",
+      component: () => {
+        return import("@/containers/create/TypeSelectList");
+      },
+      meta: {
+        title: "创作作品",
+      },
+    },
+    // 图库
+    {
+      path: "/create/system-images",
+      name: "SystemImageList",
+      component: () => {
+        return import("@/containers/create/SystemImageList.vue");
+      },
+      meta: {
+        title: "系统图库",
+      },
+    },
+    {
+      path: "/create/system-image/:id",
+      name: "SystemImagePreview",
+      component: () => {
+        return import("@/containers/create/SystemImagePreview.vue");
+      },
+      meta: {
+        title: "系统图库 - 预览",
+      },
+    },
+    // 模板
+    {
+      path: "/create/system-templates",
+      name: "SystemTemplateList",
+      component: () => {
+        return import("@/containers/create/SystemTemplateList.vue");
+      },
+      meta: {
+        title: "模板",
+      },
+    },
+    {
+      path: "/create/system-template/:id",
+      name: "SystemTemplatePreview",
+      component: () => {
+        return import("@/containers/create/SystemTemplatePreview.vue");
+      },
+      meta: {
+        title: "模板 - 预览",
+      },
+    },
+    // 创作
+    {
+      path: "/create/work",
+      name: "CreateWork",
+      component: () => {
+        return import("@/containers/create/CreateWork.vue");
+      },
+      meta: {
+        title: "叶子照明",
+      },
+    },
+    // 创作 - 添加灯型
+    {
+      path: "/create/work/add-type",
+      name: "AddTypeSelectList",
+      component: () => {
+        return import("@/containers/create/TypeSelectList.vue");
+      },
+      meta: {
+        title: "创作作品",
+      },
+    },
+    // 创作 - 切换场景
+    {
+      path: "/create/work/change-bg",
+      name: "SwitchImageSelect",
+      component: () => {
+        return import("@/containers/create/ImageSelect.vue");
+      },
+      meta: {
+        title: "创作作品",
       },
     },
   ],

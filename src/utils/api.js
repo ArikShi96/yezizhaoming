@@ -1,8 +1,16 @@
 import { http } from "./http";
+import store from "@/utils/store.js";
+
+export const HOST_NAME = "https://dengshi.yuejike.com";
 
 // upload
 export function UPLOAD_API({ upload_file }) {
-  return http("MULTI-PART", "/api/oauth/newQuickLogin", {}, { upload_file });
+  return http(
+    "MULTI-PART",
+    "/cdn/upload",
+    {},
+    { upload_file, client_id: "h5" }
+  );
 }
 
 // 微信登录模块
@@ -16,10 +24,15 @@ export const AUTH_API = {
     );
   },
   login: ({ code, mobile }) => {
-    return http("POST", "/api/users/sms", {}, { code, mobile });
+    return http("POST", "/api/oauth/sms", {}, { code, mobile });
   },
-  code: ({ access_token, mobile }) => {
-    return http("POST", "/api/sms/verify-code", {}, { access_token, mobile });
+  code: ({ mobile }) => {
+    return http(
+      "POST",
+      "/api/sms/verify-code",
+      {},
+      { access_token: store.getAccessToken() || "", mobile }
+    );
   },
   updateMobile: ({ code, mobile }) => {
     return http("POST", "/api/users/update/mobile", {}, { code, mobile });
@@ -59,15 +72,19 @@ export const WORK_API = {
 // 首页
 export const HOME_API = {
   banners: ({ order }) => {
-    return http("GET", "/api/cms/banners", { order: order || "desc" }); // desc asc
+    return http("GET", "/api/cms/banners", { order: order || "id,asc" }); // desc asc
   },
   // 图库分类
-  storeCategories: ({ category_id, page, pagesize }) => {
-    return http("GET", "/api/cms/banners", { category_id, page, pagesize });
+  storeCategories: () => {
+    return http("GET", "/api//store/image/category", {});
   },
   // 图库列表
   storeImages: ({ category_id, page, pagesize }) => {
-    return http("GET", "/api/cms/banners", { category_id, page, pagesize });
+    return http("GET", "/api/store/image", {
+      category_id,
+      page: page || 1,
+      pagesize: pagesize || 10,
+    });
   },
   // 图库详情
   getStoreDetail: ({ id }) => {
@@ -75,9 +92,12 @@ export const HOME_API = {
   },
   // 模板列表
   tplImages: ({ page, pagesize }) => {
-    return http("GET", "/api/tpl", { page, pagesize });
+    return http("GET", "/api/tpl", {
+      page: page || 1,
+      pagesize: pagesize || 10,
+    });
   },
-  // 图库详情
+  // 模板详情
   getTplDetail: ({ id }) => {
     return http("GET", `/api/tpl/${id}`, {});
   },
@@ -91,7 +111,12 @@ export const CREATE_API = {
   },
   // 商品列表
   storeList: ({ c_id, page, orderBy, sort }) => {
-    return http("GET", "/api/store/list", { c_id, page, orderBy, sort });
+    return http("GET", "/api/store/list", {
+      c_id,
+      page: page || 1,
+      orderBy,
+      sort,
+    });
   },
   // 商品详情
   storeDetail: ({ id }) => {
@@ -99,28 +124,30 @@ export const CREATE_API = {
   },
   // 商品属性
   storeStock: ({ id, c_id, page, orderBy, sort }) => {
-    return http("GET", `/api/store/detail/${id}/`, {
+    return http("GET", `/api/store/detail/${id}/stock`, {
       id,
       c_id,
-      page,
+      page: page || 1,
       orderBy,
       sort,
     });
   },
   // 创作
-  save: ({ id, products, data }) => {
+  save: ({ title, products, data, url }) => {
     return http(
       "POST",
       `/api/produce`,
-      { id },
+      {},
       {
+        title,
         products,
         data,
+        url,
       }
     );
   },
   // 修改
-  edit: ({ id, products, data }) => {
+  edit: ({ id, products, data, title, url }) => {
     return http(
       "POST",
       `/api/produce/${id}`,
@@ -128,6 +155,8 @@ export const CREATE_API = {
       {
         products,
         data,
+        title,
+        url,
       }
     );
   },

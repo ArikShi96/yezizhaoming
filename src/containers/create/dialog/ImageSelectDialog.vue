@@ -1,5 +1,5 @@
 <template>
-  <v-dialog :visible="visible" :showCloseIcon="true" @cancel="$emit('cancel')">
+  <v-dialog :visible="true" :showCloseIcon="true" @cancel="$emit('cancel')">
     <div class="dialog-title">请选择一个场景</div>
     <div class="dialog-content">
       <div class="image-type-list">
@@ -22,11 +22,6 @@
 <script>
 import store from "@/utils/store.js";
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-    },
-  },
   methods: {
     handleTypeClick(type) {
       this.$emit("confirm", type);

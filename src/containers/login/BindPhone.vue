@@ -90,10 +90,13 @@ export default {
     async getVerifyCode() {
       if (this.validatePhone(this.formData.phone)) {
         try {
-          await AUTH_API.code({
+          const res = await AUTH_API.code({
             access_token: "",
             mobile: this.formData.phone,
           });
+          if (!res.data.success) {
+            throw Error(res.data.message);
+          }
           this.validateBtn();
         } catch (err) {
           this.$alert(err.message);
@@ -126,6 +129,10 @@ export default {
         this.validatePhone(this.formData.phone) &&
         this.validateCode(this.formData.passCode)
       ) {
+        if (!this.accept) {
+          this.$alert("请先同意用户协议");
+          return;
+        }
         this.loading = true;
         try {
           await AUTH_API.updateMobile({

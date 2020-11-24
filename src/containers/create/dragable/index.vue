@@ -1,5 +1,5 @@
 <template>
-  <v-draggable-resizable-rotatable class="lock">
+  <v-draggable-resizable-rotatable>
     <div
       class="custom-draggble-img"
       :style="{ backgroundImage: 'url(' + img + ')' }"

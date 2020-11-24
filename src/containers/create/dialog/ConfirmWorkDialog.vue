@@ -21,7 +21,7 @@ export default {
   },
   methods: {
     handleConfirm() {
-      this.$emit("save-work");
+      this.$emit("confirm");
     },
   },
 };

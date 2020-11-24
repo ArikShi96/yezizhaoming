@@ -15,10 +15,11 @@ import CustomAlert from "@/components/common/CustomAlert.vue";
 import CustomButton from "@/components/common/CustomButton.vue";
 import CustomDialog from "@/components/common/CustomDialog.vue";
 import CustomRadio from "@/components/common/CustomRadio.vue";
-import * as util from "@/utils/util.js";
+import { HOST_NAME } from "@/utils/api.js";
+import store from "@/utils/store.js";
 
 if (process.env.NODE_ENV !== "development") {
-  axios.defaults.baseURL = "https://dengshi.yuejike.com";
+  axios.defaults.baseURL = HOST_NAME;
 }
 
 Vue.use(VueDraggableResizableRotatable);
@@ -40,11 +41,8 @@ axios.defaults.withCredentials = true;
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || "叶子照明";
   if (
-    !["/login", "/login/bind-phone", "/login/login-by-phone"].includes(
-      to.path
-    ) &&
-    !util.checkSession() &&
-    !!0
+    !["/login", "/login/login-by-phone"].includes(to.path) &&
+    !store.getAccessToken()
   ) {
     next({
       path: "/login",
