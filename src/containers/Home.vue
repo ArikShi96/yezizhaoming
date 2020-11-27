@@ -33,8 +33,7 @@ import { HOME_API, HOST_NAME } from "@/utils/api.js";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
 import "swiper/css/swiper.css";
 import SwiperOption from "@/utils/swiperOption.js";
-import BgImg from "@/assets/image/test/bg.jpg";
-import BgImg2 from "@/assets/image/test/bg2.png";
+import store from "@/utils/store.js";
 export default {
   components: {
     Swiper,
@@ -43,8 +42,6 @@ export default {
   data() {
     return {
       HOST_NAME,
-      BgImg,
-      BgImg2,
       swiperOption: { ...SwiperOption },
       swipers: [],
       loading: false,
@@ -67,6 +64,7 @@ export default {
     },
     // 跳转
     navigateCreate() {
+      store.clearAll();
       this.$router.push({ path: "/create/image-select" });
     },
     navigateWorkList() {

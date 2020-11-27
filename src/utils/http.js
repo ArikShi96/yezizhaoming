@@ -72,7 +72,14 @@ export const http = async (method, url, params, data, header) => {
   if (response.status === 200 && response.data.status) {
     return response.data;
   }
-  throw new Error(response.data.message || response.statusText);
+  if (response.data && response.data.message === "Unauthenticated.") {
+    window.location.replace("/#/login");
+  }
+  throw new Error(
+    response.data
+      ? response.data.message || response.statusText
+      : response.statusText
+  );
 };
 
 const encodeUrlWithParams = (url, params) => {

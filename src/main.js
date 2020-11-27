@@ -10,6 +10,8 @@ import "./assets/css/override.scss";
 import axios from "axios";
 // vue-draggable-resizable-rotatable
 import VueDraggableResizableRotatable from "vue-draggable-resizable-rotatable";
+// VueScroller
+import VueScroller from "vue-scroller";
 // custom component
 import CustomAlert from "@/components/common/CustomAlert.vue";
 import CustomButton from "@/components/common/CustomButton.vue";
@@ -22,6 +24,7 @@ if (process.env.NODE_ENV !== "development") {
   axios.defaults.baseURL = HOST_NAME;
 }
 
+Vue.use(VueScroller);
 Vue.use(VueDraggableResizableRotatable);
 Vue.use(element);
 

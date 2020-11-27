@@ -150,7 +150,6 @@ export default {
     };
   },
   mounted() {
-    store.cleatAll();
     this.showImageSelectDialog = true;
   },
   beforeRouteLeave(to, from, next) {

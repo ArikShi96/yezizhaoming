@@ -14,10 +14,18 @@ export default {
   },
   methods: {
     handleConfirm(type) {
-      this.selectBackgroundImage(type);
+      if (this.$route.path === "/create/work/change-bg") {
+        this.reselectBackgroundImage(type);
+      } else {
+        this.selectBackgroundImage(type);
+      }
     },
     handleCancel() {
-      this.$router.push({ path: "/" });
+      if (this.$route.path === "/create/work/change-bg") {
+        this.$router.push({ path: "/create/work" });
+      } else {
+        this.$router.push({ path: "/" });
+      }
     },
     // 选择背景图片
     selectBackgroundImage(type) {
@@ -43,15 +51,15 @@ export default {
     reselectBackgroundImage(type) {
       switch (type) {
         case 0: {
-          this.$router.push({ path: "/create/name-input" });
+          this.$router.push({ path: "/create/system-images&reselect=true" });
           break;
         }
         case 1: {
-          this.$router.push({ path: "/create/system-images" });
+          this.$router.push({ path: "/create/system-templates&reselect=true" });
           break;
         }
         case 2: {
-          this.$router.push({ path: "/create/system-templates" });
+          this.$router.push({ path: "/create/work" });
           break;
         }
         default: {

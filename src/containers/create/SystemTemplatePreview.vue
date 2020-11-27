@@ -1,6 +1,6 @@
 <template>
   <div class="system-template-preview-page">
-    <img class="preview-image" :src="BgImg" alt="" />
+    <img class="preview-image" :src="currentItem.url" alt="" />
     <div class="preview-actions">
       <div class="preview-action" @click="backList">重新选择</div>
       <div class="preview-action" @click="confirm">立即使用</div>
@@ -8,25 +8,32 @@
   </div>
 </template>
 <script>
-import BgImg from "@/assets/image/test/bg.jpg";
+import store from "@/utils/store.js";
 export default {
   data() {
     return {
       template: "",
       loading: false,
-      BgImg,
+      currentItem: {},
     };
   },
   mounted() {
     this.fetchTemplateDetail();
   },
   methods: {
-    async fetchTemplateDetail() {},
+    async fetchTemplateDetail() {
+      this.currentItem = {};
+    },
     backList() {
       this.$router.go(-1);
     },
     async confirm() {
-      this.$router.push({ path: "/create/name-input" });
+      store.setBackgroundImage({ type: 1, ...this.currentItem });
+      if (this.$route.query.reselect) {
+        this.$router.push({ path: "/create/work" });
+      } else {
+        this.$router.push({ path: "/create/name-input" });
+      }
     },
   },
 };

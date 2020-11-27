@@ -1,12 +1,12 @@
 const prefix = "Yezi";
 
 export default {
-  cleatAll() {
+  clearAll() {
     window.localStorage.removeItem(`${prefix}-background`);
     window.localStorage.removeItem(`${prefix}-work-name`);
     window.localStorage.removeItem(`${prefix}-work-type`);
-    // window.localStorage.removeItem(`${prefix}-is-fresh`);
-    // window.localStorage.removeItem(`${prefix}-background`);
+    window.localStorage.removeItem(`${prefix}-work-data`);
+    window.localStorage.removeItem(`${prefix}-work-id`);
     // window.localStorage.removeItem(`${prefix}-background`);
     // window.localStorage.removeItem(`${prefix}-background`);
     // window.localStorage.removeItem(`${prefix}-background`);
@@ -29,40 +29,52 @@ export default {
     window.localStorage.setItem(`${prefix}-background`, JSON.stringify(obj));
   },
   getBackgroundImage() {
-    window.localStorage.getItem(`${prefix}-background`);
+    return window.localStorage.getItem(`${prefix}-background`);
+  },
+  removeBackgroundImage() {
+    return window.localStorage.removeItem(`${prefix}-background`);
   },
   // 作品名字
   setWorkName(name) {
     window.localStorage.setItem(`${prefix}-work-name`, name);
   },
   getWorkName() {
-    window.localStorage.getItem(`${prefix}-work-name`);
+    return window.localStorage.getItem(`${prefix}-work-name`);
   },
   // 选择的一级类型
   setSelectType(type) {
-    window.localStorage.setItem(`${prefix}-work-type`, JSON.stringify([type]));
+    window.localStorage.setItem(`${prefix}-work-type`, JSON.stringify(type));
   },
   getSelectType() {
-    return JSON.parse(window.localStorage.getItem(`${prefix}-work-type`));
+    return window.localStorage.getItem(`${prefix}-work-type`);
   },
   removeSelectType() {
     window.localStorage.removeItem(`${prefix}-work-type`);
   },
   // 是否第一次进来
   setIsNewComer(flag) {
-    window.localStorage.setItem(`${prefix}-is-fresh`, flag || true);
+    window.localStorage.setItem(`${prefix}-is-fresh`, flag);
   },
   getIsNewComer() {
     return window.localStorage.getItem(`${prefix}-is-fresh`);
   },
   // 保存当前工作进度
-  setWorkList(list) {
+  setWorkData(formData) {
     window.localStorage.setItem(
-      `${prefix}-work-list`,
-      JSON.stringify(list || [])
+      `${prefix}-work-data`,
+      JSON.stringify(formData || {})
     );
   },
-  getWorkList() {
-    return JSON.parse(window.localStorage.getItem(`${prefix}-work-list`));
+  getWorkData() {
+    return window.localStorage.getItem(`${prefix}-work-data`);
+  },
+  removeWorkData() {
+    window.localStorage.removeItem(`${prefix}-work-data`);
+  },
+  setWorkId(id) {
+    window.localStorage.setItem(`${prefix}-work-id`, id);
+  },
+  getWorkId() {
+    return window.localStorage.getItem(`${prefix}-work-id`);
   },
 };

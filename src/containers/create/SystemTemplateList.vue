@@ -1,15 +1,17 @@
 <template>
-  <div class="system-template-page" v-loading="loading">
-    <img
-      v-for="(template, index) in templates || []"
-      :key="index"
-      class="template-item"
-      :src="template"
-      @click="viewTemplate(template)"
-    />
-    <div v-if="templates && templates.length === 0" class="empty-message">
+  <div class="system-template-page">
+    <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller">
+      <img
+        v-for="(template, index) in templates || []"
+        :key="index"
+        class="template-item"
+        :src="template"
+        @click="viewTemplate(template)"
+      />
+    </scroller>
+    <!-- <div v-if="templates && templates.length === 0" class="empty-message">
       暂无数据
-    </div>
+    </div> -->
   </div>
 </template>
 <script>
@@ -18,25 +20,62 @@ export default {
   data() {
     return {
       templates: "",
-      loading: false,
+      page: 0,
+      noData: false,
     };
   },
-  mounted() {
-    this.fetchTemplateList();
-  },
+  mounted() {},
   methods: {
-    async fetchTemplateList() {
-      this.loading = true;
+    /**
+     * 下拉刷新
+     */
+    refresh(done) {
+      setTimeout(async () => {
+        this.page = 1;
+        this.noData = false;
+        await this.fetchTemplateList(done);
+      }, 500);
+    },
+
+    /**
+     * 上拉获取
+     */
+    infinite(done) {
+      setTimeout(async () => {
+        this.page = this.page + 1;
+        if (this.noData) {
+          this.$refs.myscroller.finishInfinite(true);
+        } else {
+          await this.fetchTemplateList(done);
+        }
+      }, 500);
+    },
+    async fetchTemplateList(done) {
       try {
-        const res = await HOME_API.tplImages({});
-        this.templates = res.data || [];
+        const res = await HOME_API.tplImages({ page: this.page });
+        // res.data = [{}, {}];
+        // if (this.page < 3) {
+        //   res.data = [...res.data, ...res.data, ...res.data];
+        // }
+        if (this.page === 1) {
+          this.templates = res.data || [];
+        } else {
+          this.templates = [...this.templates, ...(res.data || [])];
+        }
+        if ((res.data || []).length < 20) {
+          this.noData = true;
+        }
+        done();
       } catch (err) {
         this.$alert(err.message);
       }
-      this.loading = false;
     },
     viewTemplate(template) {
-      this.$router.push({ path: `/create/system-template/${template.id}` });
+      this.$router.push({
+        path: this.$route.query.reselect
+          ? `/create/system-template/${template.id}?reselect=true`
+          : `/create/system-template/${template.id}`,
+      });
     },
   },
 };

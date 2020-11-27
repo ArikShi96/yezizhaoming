@@ -6,7 +6,7 @@
     @cancel="$emit('cancel')"
   >
     <div class="preview-wrap">
-      <img class="preview-img" :src="BgPng" alt="" />
+      <img class="preview-img" :src="(detailItem || {}).url" alt="" />
       <div class="logo-wrap">
         <img class="logo" :src="LogoPng" alt="" />
         <div class="devide"></div>
@@ -14,15 +14,15 @@
       </div>
     </div>
     <div class="action-wrap">
-      <div class="action">
+      <div class="action" @click="download">
         <img class="action-icon" :src="DownloadIcon" alt="" />
         <span>下载到本地</span>
       </div>
-      <div class="action">
+      <div class="action" @click="shareFriend">
         <img class="action-icon" :src="WechatIcon" alt="" />
         <span>分享至好友</span>
       </div>
-      <div class="action">
+      <div class="action" @click="shareTimeline">
         <img class="action-icon" :src="FriendIcon" alt="" />
         <span>分享至朋友圈</span>
       </div>
@@ -31,62 +31,68 @@
 </template>
 <script>
 import LogoPng from "@/assets/image/common/logo2.png";
-import BgPng from "@/assets/image/test/bg.jpg";
 import DownloadIcon from "@/assets/image/common/share/download.png";
 import WechatIcon from "@/assets/image/common/share/wechat.png";
 import FriendIcon from "@/assets/image/common/share/friend.png";
+const appid = "wxa035284c42ea6b97";
+// import { AUTH_API } from "@/utils/api.js";
 export default {
   props: {
     visible: {
       type: Boolean,
     },
+    detailItem: {
+      type: Object,
+    },
   },
   data() {
     return {
+      appid,
       LogoPng,
-      BgPng,
       DownloadIcon,
       WechatIcon,
       FriendIcon,
     };
   },
-  created() {
-    // window.wx.config({
-    //   debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
-    //   appId: "", // 必填，公众号的唯一标识
-    //   timestamp: "", // 必填，生成签名的时间戳
-    //   nonceStr: "", // 必填，生成签名的随机串
-    //   signature: "", // 必填，签名
-    //   jsApiList: [], // 必填，需要使用的JS接口列表
-    // });
-  },
   methods: {
     shareFriend() {
-      // window.wx.ready(function () {
-      //   //需在用户可能点击分享按钮前就先调用
-      //   window.wx.updateAppMessageShareData({
-      //     title: "", // 分享标题
-      //     desc: "", // 分享描述
-      //     link: "", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-      //     imgUrl: "", // 分享图标
-      //     success: function () {
-      //       // 设置成功
-      //     },
-      //   });
-      // });
+      window.wx.updateAppMessageShareData({
+        title: `${this.detailItem.title}`, // 分享标题
+        desc: "分享作品", // 分享描述
+        link: `${window.location.host}/#/work-detail/${this.detailItem.id}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: `${this.detailItem.url}`, // 分享图标
+        success: function () {
+          // 设置成功
+        },
+      });
     },
     shareTimeline() {
-      // window.wx.ready(function () {
-      //   //需在用户可能点击分享按钮前就先调用
-      //   window.wx.updateTimelineShareData({
-      //     title: "", // 分享标题
-      //     link: "", // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
-      //     imgUrl: "", // 分享图标
-      //     success: function () {
-      //       // 设置成功
-      //     },
-      //   });
-      // });
+      window.wx.updateTimelineShareData({
+        title: `${this.detailItem.title}`, // 分享标题
+        link: `${window.location.host}/#/work-detail/${this.detailItem.id}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
+        imgUrl: `${this.detailItem.url}`, // 分享图标
+        success: function () {
+          // 设置成功
+        },
+      });
+    },
+    download() {
+      // window.location.href((this.detailItem || {}).url);
+      // 创建a标签 并设置其相关属性，最后触发其点击事件
+
+      let a = document.createElement("a");
+
+      let clickEvent = document.createEvent("MouseEvents");
+
+      a.setAttribute("href", this.detailItem.url);
+
+      a.setAttribute("download", "codeImg");
+
+      a.setAttribute("target", "_blank");
+
+      clickEvent.initEvent("click", true, true);
+
+      a.dispatchEvent(clickEvent);
     },
   },
 };
@@ -103,8 +109,8 @@ export default {
   padding: 0.75rem;
   margin-bottom: 0.75rem;
   .preview-img {
-    width: 18rem;
-    height: 25.375rem;
+    width: 16.2rem;
+    height: 22.8rem;
     margin-bottom: 1rem;
     object-fit: cover;
   }

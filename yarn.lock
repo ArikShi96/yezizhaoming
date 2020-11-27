@@ -4696,10 +4696,10 @@
     "toposort" "^1.0.0"
     "util.promisify" "1.0.0"
 
-"html2canvas@^1.0.0-rc.7":
-  "integrity" "sha512-yvPNZGejB2KOyKleZspjK/NruXVQuowu8NnV2HYG7gW7ytzl+umffbtUI62v2dCHQLDdsK6HIDtyJZ0W3neerA=="
-  "resolved" "https://registry.npmjs.org/html2canvas/-/html2canvas-1.0.0-rc.7.tgz"
-  "version" "1.0.0-rc.7"
+"html2canvas@1.0.0-rc.4":
+  "integrity" "sha512-5sJ+oM3FfNFpGVbMQkJFDl1WH5Sa293l2koMEZWbaehJ3dWHty4mSrmZtfWlWDoLckfGojZS9aZ7Zk3uFouyPw=="
+  "resolved" "https://registry.npmjs.org/html2canvas/-/html2canvas-1.0.0-rc.4.tgz"
+  "version" "1.0.0-rc.4"
   dependencies:
     "css-line-break" "1.1.1"
 
@@ -8982,6 +8982,13 @@
   "resolved" "https://registry.yarnpkg.com/vue-router/-/vue-router-3.4.8.tgz"
   "version" "3.4.8"
 
+"vue-scroller@2.2.0":
+  "integrity" "sha1-S/cK4UoltUPneasgydrtb/xUl1M="
+  "resolved" "https://registry.npmjs.org/vue-scroller/-/vue-scroller-2.2.0.tgz"
+  "version" "2.2.0"
+  dependencies:
+    "vue" "^2.2.6"
+
 "vue-style-loader@^4.1.0", "vue-style-loader@^4.1.2":
   "integrity" "sha512-0ip8ge6Gzz/Bk0iHovU9XAUQaFt/G2B61bnWa2tCcqqdgfHs1lF9xXorFbE55Gmy92okFT+8bfmySuUOu13vxQ=="
   "resolved" "https://registry.yarnpkg.com/vue-style-loader/-/vue-style-loader-4.1.2.tgz"
@@ -9003,7 +9010,7 @@
   "resolved" "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz"
   "version" "1.9.1"
 
-"vue@^2 || ^3.0.0-0", "vue@^2.5.17", "vue@^2.5.2", "vue@^2.6.12", "vue@2.x":
+"vue@^2 || ^3.0.0-0", "vue@^2.2.6", "vue@^2.5.17", "vue@^2.5.2", "vue@^2.6.12", "vue@2.x":
   "integrity" "sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg=="
   "resolved" "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz"
   "version" "2.6.12"

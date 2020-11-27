@@ -1,33 +1,49 @@
 <template>
   <div class="shopping-cart-page" v-loading="loading">
-    <div class="mode-wrap" @click="editMode = !editMode">
+    <!-- <div class="mode-wrap" @click="editMode = !editMode">
       {{ editMode ? "完成" : "管理" }}
-    </div>
-    <div v-for="(cart, index) in carts" :key="index" class="cart-item">
-      <div class="cart-title">
-        <v-radio class="radio-wrap" :checked="cart.checked" />
+    </div> -->
+    <div
+      v-for="(detail, index) in workItem.details || []"
+      :key="index"
+      class="detail-item"
+    >
+      <div class="detail-title">
+        <!-- <v-radio class="radio-wrap" :checked="detail.checked" /> -->
         <img
           class="expand-icon"
-          :class="{ expand: cart.expand }"
+          :class="{ expand: detail.expand }"
           :src="ArrowIcon"
           @click="expandCart(index)"
         />
-        <span>台灯(1)</span>
-        <span class="price">¥345.56</span>
+        <span>{{ detail.category_name }}</span>
+        <span class="price"
+          >¥{{
+            detail.total_price
+              ? parseFloat(detail.total_price).toFixed(2)
+              : "0.00"
+          }}</span
+        >
       </div>
-      <div class="secondary-list" :class="{ visible: cart.expand }">
+      <div class="secondary-list" :class="{ visible: detail.expand }">
         <div
-          v-for="(item, idx) in cart.items"
+          v-for="(item, idx) in detail.products"
           :key="idx"
           class="secondary-item"
         >
-          <v-radio
+          <!-- <v-radio
             class="radio-wrap"
-            v-if="cart.expand"
+            v-if="detail.expand"
             :checked="item.checked"
-          />
-          <span>台灯(1)</span>
-          <span class="price price-small">¥345.56</span>
+          /> -->
+          <span>{{ item.goods_name }}</span>
+          <span class="price price-small"
+            >¥{{
+              item.total_price
+                ? parseFloat(item.total_price).toFixed(2)
+                : "0.00"
+            }}</span
+          >
         </div>
       </div>
     </div>
@@ -37,14 +53,20 @@
     </div>
     <div class="checkout-wrap">
       <div class="checkout-info">
-        <v-radio
+        <!-- <v-radio
           class="radio-wrap"
           :checked="checkoutAll"
           @on-click="checkoutAll = !checkoutAll"
         ></v-radio>
-        <div>全选</div>
+        <div>全选</div> -->
         <div class="tip" v-if="!editMode">合计 :</div>
-        <div class="price" v-if="!editMode">{{ `￥${totalPrice}` }}</div>
+        <div class="price" v-if="!editMode">
+          ¥{{
+            workItem.total_price
+              ? parseFloat(workItem.total_price).toFixed(2)
+              : "0.00"
+          }}
+        </div>
       </div>
       <div v-if="editMode" class="checkout-action delete" @click="submitList">
         删除
@@ -62,10 +84,9 @@ export default {
     return {
       ArrowIcon,
       ServiceIcon,
-      carts: [{ items: [{}] }, { items: [{}] }],
+      workItem: {},
       editMode: false,
       checkoutAll: false,
-      totalPrice: "10.00",
       loading: false,
     };
   },
@@ -77,16 +98,21 @@ export default {
   },
   methods: {
     async fetchWorkDetail() {
+      this.loading = true;
       try {
         const res = await WORK_API.getDetail({ id: this.$route.params.id });
-        this.workItem = res.data || [];
+        this.workItem = res.data || {};
       } catch (err) {
         this.$alert(err.message);
       }
       this.loading = false;
     },
     expandCart(index) {
-      this.$set(this.carts[index], "expand", !this.carts[index].expand);
+      this.$set(
+        this.workItem.details[index],
+        "expand",
+        !this.workItem.details[index].expand
+      );
     },
     // 删除 || 结算
     submitList() {},
@@ -124,7 +150,7 @@ export default {
     color: #333333;
     padding: 1.25rem 1.25rem 0.5rem;
   }
-  .cart-item {
+  .detail-item {
     background-color: #ffffff;
     border-bottom: 0.0625rem solid #dedede;
     font-size: 0.875rem;
@@ -132,7 +158,7 @@ export default {
     font-weight: 400;
     text-align: left;
     color: #333333;
-    .cart-title {
+    .detail-title {
       position: relative;
       display: flex;
       align-items: center;

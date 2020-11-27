@@ -56,6 +56,7 @@
       class="confirm-button"
       text="立即获取3D图纸"
       type="primary"
+      :loading="loading"
       @onClick="confirm"
     ></v-button>
     <div class="hint-message">
@@ -71,11 +72,13 @@ export default {
     return {
       DocumentIcon,
       formData: {},
+      loading: false,
     };
   },
   methods: {
     async confirm() {
       const { name, mobile, email, occupation, address } = this.formData;
+      this.loading = true;
       try {
         if (!name || !mobile || !email) {
           throw Error("信息不完整，请填写完整信息～");
@@ -92,6 +95,7 @@ export default {
       } catch (err) {
         this.$alert(err.message);
       }
+      this.loading = false;
     },
   },
 };

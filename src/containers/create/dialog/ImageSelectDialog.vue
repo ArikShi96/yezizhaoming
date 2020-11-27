@@ -1,7 +1,7 @@
 <template>
   <v-dialog :visible="true" :showCloseIcon="true" @cancel="$emit('cancel')">
     <div class="dialog-title">请选择一个场景</div>
-    <div class="dialog-content">
+    <div v-loading="loading" class="dialog-content">
       <div class="image-type-list">
         <el-upload
           ref="upload"
@@ -21,15 +21,25 @@
 </template>
 <script>
 import store from "@/utils/store.js";
+import { UPLOAD_API } from "@/utils/api.js";
 export default {
+  data() {
+    return {
+      loading: false,
+    };
+  },
   methods: {
     handleTypeClick(type) {
       this.$emit("confirm", type);
     },
     async handleFileChange(file) {
-      // TODO
+      this.loading = true;
       const type = 2;
-      store.setBackgroundImage({ type, file: file.name, id: "" });
+      const res = await UPLOAD_API({
+        upload_file: file.raw,
+      });
+      this.loading = false;
+      store.setBackgroundImage({ type, url: res.data.url });
       this.$emit("confirm", type);
     },
   },

@@ -3,24 +3,20 @@
     <more-selection
       :visible="showMoreSelection"
       :allTabs="allTabs || []"
+      @cancel="showMoreSelection = false"
       @select-item="selectItem"
     ></more-selection>
     <div
       v-if="!showMoreSelection"
       class="create-work-wrap"
-      :style="{ backgroundImage: 'url(' + formData.backgroundImage + ')' }"
+      :style="{ backgroundImage: 'url(' + formData.backgroundImage.url + ')' }"
     >
       <!-- 操作按钮 -->
-      <img
-        class="back-icon"
-        :src="BackIcon"
-        alt=""
-        @click="showCancelWorkDialog = true"
-      />
-      <div class="add-type">
+      <img class="back-icon" :src="BackIcon" alt="" @click="handleCancel" />
+      <div class="add-type" @click="showConfirmWorkDialog = true">
         <img class="icon" :src="AddIcon" alt="" /> 添加灯型
       </div>
-      <div class="switch-theme">
+      <div class="switch-theme" @click="navigateChangeBg">
         <img class="icon" :src="RefreshIcon" alt="" /> 切换场景
       </div>
       <!-- 所有编辑部件 -->
@@ -105,11 +101,7 @@
       </div>
       <!-- 操作 -->
       <div class="create-work-actions">
-        <v-button
-          text="取消"
-          type="gray"
-          @onClick="showCancelWorkDialog = true"
-        ></v-button>
+        <v-button text="取消" type="gray" @onClick="handleCancel"></v-button>
         <v-button text="完成" type="primary" @onClick="submitWork"></v-button>
       </div>
     </div>
@@ -122,15 +114,20 @@
       @confirm="confirmItemSelect"
     ></accessory-drawer>
     <!-- 保存/取消作品 -->
+    <return-detail-dialog
+      :visible="shoReturnDetailDialog"
+      @cancel="shoReturnDetailDialog = false"
+      @confirm="navigateDetail"
+    ></return-detail-dialog>
     <cancel-work-dialog
       :visible="showCancelWorkDialog"
       @cancel="showCancelWorkDialog = false"
-      @cancel-work="navigateTypeSelect"
+      @confirm="navigateTypeSelect"
     ></cancel-work-dialog>
     <confirm-work-dialog
       :visible="showConfirmWorkDialog"
       @cancel="showConfirmWorkDialog = false"
-      @save-work="handleLock"
+      @confirm="navigateAddType"
     ></confirm-work-dialog>
   </div>
 </template>
@@ -138,16 +135,16 @@
 import DeleteIcon from "@/assets/image/common/draggable/delete.png";
 import LockIcon from "@/assets/image/common/draggable/lock.png";
 import PlusIcon from "@/assets/image/common/draggable/plus.png";
-import BgImg from "@/assets/image/test/bg.jpg";
 import AddIcon from "@/assets/image/common/add.png";
 import BackIcon from "@/assets/image/common/back.png";
 import RefreshIcon from "@/assets/image/common/refresh.png";
 // 配件弹窗
 import MoreSelection from "@/containers/create/MoreSelection.vue";
 import AccessoryDrawer from "@/containers/create/AccessoryDrawer.vue";
+import ReturnDetailDialog from "@/containers/create/dialog/ReturnDetailDialog.vue";
 import CancelWorkDialog from "@/containers/create/dialog/CancelWorkDialog.vue";
 import ConfirmWorkDialog from "@/containers/create/dialog/ConfirmWorkDialog.vue";
-import { CREATE_API, UPLOAD_API } from "@/utils/api.js";
+import { CREATE_API, UPLOAD_API, WORK_API } from "@/utils/api.js";
 import store from "@/utils/store.js";
 import html2canvas from "html2canvas";
 import * as util from "@/utils/util.js";
@@ -158,10 +155,14 @@ export default {
     AccessoryDrawer,
     CancelWorkDialog,
     ConfirmWorkDialog,
+    ReturnDetailDialog,
   },
   data() {
     return {
+      currentWorkId: "",
+      currentWorkName: "",
       loading: false,
+      shoReturnDetailDialog: false,
       showCancelWorkDialog: false,
       showConfirmWorkDialog: false,
       showMoreSelection: false,
@@ -174,12 +175,11 @@ export default {
       DeleteIcon,
       LockIcon,
       PlusIcon,
-      BgImg,
       allTabs: [],
       allTabMap: {},
       // 创作内容
       formData: {
-        backgroundImage: BgImg,
+        backgroundImage: {},
         workList: [],
       },
       currentSelect: "",
@@ -201,8 +201,33 @@ export default {
       return selectedTab.id;
     },
   },
-  mounted() {
+  async mounted() {
+    this.currentWorkId = store.getWorkId();
+    this.currentWorkName = store.getWorkName();
     this.fetchAllTabs();
+    const initFormData = store.getWorkData();
+    const replacedBackground = store.getBackgroundImage();
+    if (initFormData) {
+      this.formData = JSON.parse(initFormData);
+    } else if (this.currentWorkId) {
+      this.loading = true;
+      try {
+        const res = await WORK_API.getDetail({ id: this.currentWorkId });
+        this.formData = JSON.parse(res.data.data || "{}");
+      } catch (err) {
+        this.$alert(err.message);
+      }
+      this.loading = false;
+    }
+    if (replacedBackground) {
+      this.$set(
+        this.formData,
+        "backgroundImage",
+        JSON.parse(replacedBackground)
+      );
+    }
+    // 清理localstorage
+    store.removeWorkData();
   },
   methods: {
     // 列表操作
@@ -243,7 +268,7 @@ export default {
     },
     async handleLock(index) {
       // 控件有bug
-      return Promise.resolve(async () => {
+      return Promise.resolve().then(async () => {
         const currentItem = this.formData.workList[index];
         if (currentItem.unionId) {
           // 解锁
@@ -290,7 +315,9 @@ export default {
               }
             });
             this.formData.workList.push({
-              type: JSON.parse(JSON.stringify(store.getSelectType())),
+              type: JSON.parse(
+                JSON.stringify(JSON.parse(store.getSelectType()))
+              ),
               img: imgRrl,
               unionId: parentUnionId,
               meta: {
@@ -317,19 +344,34 @@ export default {
       this.currentSelect = item;
     },
     onDragStop(x, y) {
-      console.log(`x: ${x}, y: ${y}`);
+      // console.log(`x: ${x}, y: ${y}`);
+      const offX = x - this.currentSelect.meta.offsetX;
+      const offY = y - this.currentSelect.meta.offsetY;
       this.currentSelect.meta.offsetX = x;
       this.currentSelect.meta.offsetY = y;
+      // 组合动,配件跟着动
+      if (this.currentSelect.unionId) {
+        this.formData.workList.forEach((workItem) => {
+          if (workItem.parentUnionId === this.currentSelect.unionId) {
+            workItem.meta.offsetX = workItem.meta.offsetX + offX;
+            workItem.meta.offsetY = workItem.meta.offsetY + offY;
+          }
+        });
+      }
     },
     onResizstop(x, y, width, height) {
-      console.log(`width: ${width}, height: ${height}`);
+      // console.log(`width: ${width}, height: ${height}`);
       this.currentSelect.meta.offsetX = x;
       this.currentSelect.meta.offsetY = y;
       this.currentSelect.meta.width = width;
       this.currentSelect.meta.height = height;
+      // 组合动,配件跟着动
+      if (this.currentSelect.unionId) {
+        // TODO
+      }
     },
     onRotateStop(rotate) {
-      console.log(`rotate: ${rotate}`);
+      // console.log(`rotate: ${rotate}`);
       this.currentSelect.meta.rotate = rotate;
     },
     // 页面元素转图片
@@ -351,9 +393,11 @@ export default {
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.remove("canvas"));
       let url = canvas.toDataURL("image/png");
+      this.loading = true;
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "合成图片.png"),
       });
+      this.loading = false;
       return res.data.url;
     },
     dataURLtoFile(dataurl, filename) {
@@ -370,9 +414,12 @@ export default {
     // 更多选择
     async fetchAllTabs() {
       try {
-        const selectedTabs = store.getSelectType();
+        const selectedTabs = JSON.parse(store.getSelectType());
+        if (!selectedTabs) {
+          return;
+        }
         const responses = await Promise.all(
-          selectedTabs.map((tab) => {
+          [selectedTabs].map((tab) => {
             return CREATE_API.categories({ parent_id: tab.id });
           })
         );
@@ -406,11 +453,11 @@ export default {
       this.expand = !this.expand;
     },
     async selectTab(selectedIndex) {
-      await this.fetchTabItems(this.allTabs[selectedIndex].id);
       this.allTabs = this.allTabs.map((tab, index) => {
         tab.selected = selectedIndex === index;
         return tab;
       });
+      await this.fetchTabItems(this.allTabs[selectedIndex].id);
     },
     selectItem(item) {
       this.expand = false;
@@ -430,21 +477,37 @@ export default {
         {
           item,
           meta: { offsetX: 0, offsetY: 0, width: 100, height: 100, rotate: 0 },
-          img:
-            "https://dss0.bdstatic.com/6Ox1bjeh1BF3odCf/it/u=717327195,1849355530&fm=85&app=92&f=JPEG?w=121&h=75&s=DE23716E4FA04D32120662580200C0FD",
+          img: item.img,
         },
       ]);
       this.$alert("点击锁定组合当前页面配件并保存");
     },
     // 路由跳转
-    navigateAddType() {
+    async navigateAddType() {
+      await this.formData.workList.forEach(async (workItem, index) => {
+        if (!workItem.parentUnionId) {
+          await this.handleLock(index);
+        }
+      });
+      store.setWorkData(this.formData);
       this.$router.push({ path: "/create/work/add-type" });
     },
     navigateChangeBg() {
+      store.setWorkData(this.formData);
       this.$router.push({ path: "/create/work/change-bg" });
     },
     navigateTypeSelect() {
       this.$router.push({ path: "/create/type-select" });
+    },
+    navigateDetail() {
+      this.$router.push({ path: `/work-detail/${this.currentWorkId}` });
+    },
+    handleCancel() {
+      if (this.currentWorkId) {
+        this.shoReturnDetailDialog = true;
+      } else {
+        this.showCancelWorkDialog = true;
+      }
     },
     // 提交
     async submitWork() {
@@ -457,31 +520,33 @@ export default {
           await this.handleLock(index);
         }
       });
-      this.loading = true;
       try {
         const url = await this.generateBackground();
-        if (this.$router.params.id) {
-          await CREATE_API.edit({
-            id: this.$router.params.id,
+        let res = {};
+        this.loading = true;
+        if (this.currentWorkId) {
+          res = await CREATE_API.edit({
+            id: this.currentWorkId,
             products: this.generateProducts(),
-            title: store.getWorkName(),
+            title: this.currentWorkName,
             url,
-            data: JSON.stringify(this.formData.workList),
+            data: JSON.stringify(this.formData),
           });
         } else {
-          await CREATE_API.save({
+          res = await CREATE_API.save({
             products: this.generateProducts(),
             title: store.getWorkName(),
             url,
-            data: JSON.stringify(this.formData.workList),
+            data: JSON.stringify(this.formData),
           });
         }
+        this.loading = false;
         this.$alert("保存成功");
         // 跳转
+        this.$router.push({ path: `/work-detail/${res.data.id}` });
       } catch (err) {
         this.$alert(err.message);
       }
-      this.loading = false;
     },
     generateProducts() {
       const productMap = {}; // {id => quality}
@@ -521,9 +586,11 @@ export default {
         .getElementsByClassName("create-work-wrap")[0]
         .classList.remove("hidden");
       let url = canvas.toDataURL("image/png");
+      this.loading = true;
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "背景图片.png"),
       });
+      this.loading = false;
       return res.data.url;
     },
   },

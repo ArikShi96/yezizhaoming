@@ -36,7 +36,7 @@
             }"
             @click="toogleSize(spec.label_key, size)"
           >
-            {{ size.value }}
+            {{ size.alias }}
           </div>
           <div
             v-if="(spec.list || []).length % 3 === 2"
@@ -97,6 +97,7 @@ export default {
   },
   methods: {
     async fetchDetail() {
+      this.loading = true;
       try {
         const res = await CREATE_API.storeStock({
           id: this.currentItem.id,
@@ -106,6 +107,7 @@ export default {
       } catch (err) {
         this.$alert(err.message);
       }
+      this.loading = false;
     },
     toogleSize(label_key, size) {
       this.$set(this.selectedSpec, [label_key], size);

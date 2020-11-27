@@ -1,7 +1,8 @@
 <template>
   <div class="work-item-wrap">
-    <div class="work-item">
+    <div v-loading="loading" class="work-item">
       <img
+        v-if="!hideExpandFirst"
         class="expand-icon"
         :class="{ expand: expand }"
         :src="ArrowIcon"
@@ -9,17 +10,31 @@
       />
       <img
         class="work-avatar"
-        src="../../assets/image/test/bg.jpg"
+        :src="computedItem.url"
         @click="$emit('on-click')"
       />
       <div class="work-detail">
         <div class="title">
-          <span class="status-tag running">制作中</span>
-          <span>北欧卧室灯大气家用卧室灯简云北欧卧室灯简云</span>
+          <span v-if="computedItem.status === 0" class="status-tag running"
+            >制作中</span
+          >
+          <span v-if="computedItem.status === 1" class="status-tag completed"
+            >已付款</span
+          >
+          <span v-if="computedItem.status === 2" class="status-tag completed"
+            >已获取</span
+          >
+          <span>{{ computedItem.title }}</span>
         </div>
         <div class="info">
-          <div class="date">2010-10-20</div>
-          <div class="price">¥345.00</div>
+          <div class="date">{{ computedItem.updated_at }}</div>
+          <div class="price">
+            ¥{{
+              computedItem.total_price
+                ? parseFloat(computedItem.total_price).toFixed(2)
+                : "0.00"
+            }}
+          </div>
         </div>
         <div class="actions">
           <div class="action action-buy" @click="navigateShoppingCard">
@@ -37,26 +52,46 @@
         </div>
       </div>
     </div>
-    <div class="kind-list" :class="{ visible: expand }">
-      <div v-for="(kind, index) in kinds" :key="index" class="kind-item">
-        <div class="kind-title">
+    <div class="detail-list" :class="{ visible: expand }">
+      <div
+        v-for="(detail, index) in computedItem.details || []"
+        :key="index"
+        class="detail-item"
+      >
+        <div class="detail-title" :class="{ single: hideExpandFirst }">
           <img
             class="expand-icon"
-            :class="{ expand: kind.expand }"
+            :class="{ expand: detail.expand }"
             :src="ArrowIcon"
             @click="expandSecondary(index)"
           />
-          <span>台灯(1)</span>
-          <span class="price">¥345.56</span>
+          <span>{{ detail.category_name }}</span>
+          <span class="price"
+            >¥{{
+              detail.total_price
+                ? parseFloat(detail.total_price).toFixed(2)
+                : "0.00"
+            }}</span
+          >
         </div>
-        <div class="secondary-list" :class="{ visible: kind.expand }">
+        <div class="secondary-list" :class="{ visible: detail.expand }">
           <div
-            v-for="(item, idx) in kind.items"
+            v-for="(item, idx) in detail.products"
             :key="idx"
             class="secondary-item"
+            :class="{ single: hideExpandFirst }"
           >
-            <span>台灯(1)</span>
-            <span class="price price-small">¥345.56</span>
+            <span>{{ item.goods_name }}</span>
+            <div>
+              <span class="quantity">x {{ item.quantity }}</span>
+              <span class="price price-small"
+                >¥{{
+                  item.total_price
+                    ? parseFloat(item.total_price).toFixed(2)
+                    : "0.00"
+                }}</span
+              >
+            </div>
           </div>
         </div>
       </div>
@@ -70,6 +105,7 @@
     <!-- 分享弹框 -->
     <work-share-dialog
       :visible="showWorkShareDialog"
+      :detailItem="computedItem"
       @cancel="showWorkShareDialog = false"
     ></work-share-dialog>
   </div>
@@ -81,13 +117,17 @@ import FetchIcon from "@/assets/image/common/work/3D.png";
 import ShoppingIcon from "@/assets/image/common/work/cart.png";
 import WorkShareDialog from "@/components/work/WorkShareDialog.vue";
 import FetchTipDialog from "@/components/work/FetchTipDialog.vue";
+import { WORK_API } from "@/utils/api.js";
 export default {
   components: {
     WorkShareDialog,
     FetchTipDialog,
   },
   props: {
-    item: {
+    basicItem: {
+      type: Object,
+    },
+    detailItem: {
       type: Object,
     },
   },
@@ -97,25 +137,57 @@ export default {
       ShareIcon,
       FetchIcon,
       ShoppingIcon,
+      loading: false,
       showFetchTipDialog: false,
       showWorkShareDialog: false,
       expand: false,
-      kinds: [{ items: [{}] }, { items: [{}] }],
+      hideExpandFirst: false,
+      details: [{ items: [{}] }, { items: [{}] }],
+      initDetailItem: "",
     };
   },
-  mounted() {},
+  computed: {
+    computedItem() {
+      return this.initDetailItem || this.basicItem;
+    },
+  },
+  watch: {
+    async expand() {
+      if (this.expand && !this.initDetailItem) {
+        this.loading = true;
+        try {
+          const res = await WORK_API.getDetail({ id: this.basicItem.id });
+          this.initDetailItem = res.data || {};
+        } catch (err) {
+          this.$alert(err.message);
+        }
+        this.loading = false;
+      }
+    },
+    detailItem() {
+      this.initDetailItem = this.detailItem || "";
+      if (this.initDetailItem) {
+        this.expand = true;
+        this.hideExpandFirst = true;
+      }
+    },
+  },
   methods: {
     expandFirst() {
       this.expand = !this.expand;
     },
     expandSecondary(index) {
-      this.$set(this.kinds[index], "expand", !this.kinds[index].expand);
+      this.$set(
+        this.initDetailItem.details[index],
+        "expand",
+        !this.initDetailItem.details[index].expand
+      );
     },
     navigateWorkForm() {
-      this.$router.push({ path: `/work-form/${this.$route.params.id}` });
+      this.$router.push({ path: `/work-form/${this.basicItem.id}` });
     },
     navigateShoppingCard() {
-      this.$router.push({ path: `/shopping-cart/${this.$route.params.id}` });
+      this.$router.push({ path: `/shopping-cart/${this.basicItem.id}` });
     },
   },
 };
@@ -127,7 +199,6 @@ export default {
   .expand-icon {
     width: 1.5rem;
     height: 1.5rem;
-    margin-right: 0.25rem;
     transition: transform 0.3s;
     &.expand {
       transform: rotate(90deg);
@@ -142,6 +213,7 @@ export default {
       width: 4rem;
       object-fit: cover;
       margin-right: 0.625rem;
+      margin-left: 0.25rem;
     }
     .work-detail {
       flex: auto;
@@ -213,7 +285,7 @@ export default {
       }
     }
   }
-  .kind-list {
+  .detail-list {
     height: 0;
     transition: all 0.3s;
     overflow: hidden;
@@ -225,6 +297,13 @@ export default {
     font-weight: 400;
     text-align: left;
     color: #333333;
+    .quantity {
+      font-size: 0.8125rem;
+      font-family: PingFangSC, PingFangSC-Regular;
+      text-align: left;
+      color: #666666;
+      line-height: 1.125rem;
+    }
     .price {
       font-size: 0.875rem;
       font-family: PingFang, PingFang-SC;
@@ -232,14 +311,20 @@ export default {
       margin-left: auto;
       &.price-small {
         font-size: 0.8125rem;
+        display: inline-block;
+        width: 5rem;
+        text-align: right;
       }
     }
-    .kind-item {
+    .detail-item {
       border-top: 0.0625rem solid #dedede;
-      .kind-title {
+      .detail-title {
         display: flex;
         align-items: center;
         padding: 0.75rem 1.25rem 0.75rem 2rem;
+        &.single {
+          padding-left: 0.5rem;
+        }
       }
       .secondary-list {
         height: 0;
@@ -254,6 +339,9 @@ export default {
           align-items: center;
           justify-content: space-between;
           padding: 0.5rem 1.25rem 0.5rem 3.75rem;
+          &.single {
+            padding-left: 2.25rem;
+          }
         }
       }
     }

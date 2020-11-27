@@ -1,5 +1,6 @@
 <template>
   <div v-if="visible" class="more-select">
+    <div class="action-wrap" @click="$emit('cancel')">取消</div>
     <el-tabs tab-position="left" v-model="activeName">
       <el-tab-pane
         v-for="tab in allTabs"
@@ -78,6 +79,18 @@ export default {
 };
 </script>
 <style lang="scss" scoped>
+.action-wrap {
+  font-size: 0.875rem;
+  font-family: PingFangSC, PingFangSC-Heavy;
+  font-weight: 800;
+  text-align: right;
+  color: #99c901;
+  position: absolute;
+  padding: 10px 20px;
+  top: 0;
+  right: 0;
+  z-index: 100;
+}
 .items-wrap {
   padding: 1.25rem 1.5rem;
   .items-title {

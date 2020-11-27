@@ -15,12 +15,16 @@ export function UPLOAD_API({ upload_file }) {
 
 // 微信登录模块
 export const AUTH_API = {
+  oauth: ({ redirect_url }) => {
+    return http("GET", "/oauth/wxOauth", { redirect_url });
+  },
   quickLogin: ({ open_id }) => {
     return http(
       "POST",
       "/api/oauth/newQuickLogin",
       {},
-      { open_id: open_id || "ogJ-56pVvPwRGVf5t6oJLrneMOr4" }
+      { open_id }
+      // { open_id: open_id || "o3xbv5qjcz5tKawKVSuCUjZHEzrU" }
     );
   },
   login: ({ code, mobile }) => {
@@ -38,12 +42,10 @@ export const AUTH_API = {
     return http("POST", "/api/users/update/mobile", {}, { code, mobile });
   },
   getFullUserInfo: ({ open_id }) => {
-    return http(
-      "POST",
-      "/api/oauth/getFullUserInfo",
-      {},
-      { open_id: open_id || "ogJ-56pVvPwRGVf5t6oJLrneMOr4" }
-    );
+    return http("POST", "/api/oauth/getFullUserInfo", {}, { open_id: open_id });
+  },
+  getConfig: () => {
+    return http("get", "/wechat/jssdkconfig");
   },
 };
 
@@ -52,17 +54,20 @@ export const WORK_API = {
   list: ({ page, pagesize }) => {
     return http("GET", "/api/my-tpl", {
       page: page || 1,
-      pagesize: pagesize || 10,
+      pagesize: pagesize || 20,
     });
   },
   getDetail: ({ id }) => {
     return http("GET", `/api/produce/${id}`, {});
   },
+  delete: ({ id }) => {
+    return http("POST", `/api/produce/${id}`, { _method: "delete" });
+  },
   // 获取图纸
   getDrawing: ({ id, name, mobile, email, occupation, address }) => {
     return http(
       "POST",
-      `/api/my-drawing/${id}`,
+      `/api/produce/order/${id}`,
       {},
       { name, mobile, email, occupation, address }
     );
@@ -83,7 +88,7 @@ export const HOME_API = {
     return http("GET", "/api/store/image", {
       category_id,
       page: page || 1,
-      pagesize: pagesize || 10,
+      pagesize: pagesize || 100,
     });
   },
   // 图库详情
@@ -94,7 +99,7 @@ export const HOME_API = {
   tplImages: ({ page, pagesize }) => {
     return http("GET", "/api/tpl", {
       page: page || 1,
-      pagesize: pagesize || 10,
+      pagesize: pagesize || 20,
     });
   },
   // 模板详情

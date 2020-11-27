@@ -8,7 +8,7 @@
       class="confirm-button"
       text="确定"
       type="primary"
-      @onClick="countDown"
+      @onClick="navigateWorkList"
     ></v-button>
     <div class="href-message">（{{ countDownNum }})秒后自动跳转我的作品</div>
   </div>
@@ -16,26 +16,15 @@
 <script>
 import LogoPng from "@/assets/image/common/logo.png";
 export default {
-  props: {
-    visible: {
-      type: Boolean,
-    },
-  },
   data() {
     return {
       LogoPng,
       countDownNum: 5,
     };
   },
-  watch: {
-    visible() {
-      if (this.visible) {
-        this.countDownNum = 5;
-      }
-    },
-  },
   methods: {
     countDown() {
+      this.countDownNum = 5;
       let timer = setInterval(() => {
         if (this.countDownNum === 0) {
           clearInterval(timer);

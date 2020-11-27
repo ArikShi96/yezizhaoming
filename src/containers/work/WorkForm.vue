@@ -1,10 +1,10 @@
 <template>
   <div class="work-form-page">
     <work-item-form-success
+      ref="success"
       v-if="showSuccess"
-      :visible="showSuccess"
     ></work-item-form-success>
-    <work-item-form v-else @confirm="showSuccess = true"></work-item-form>
+    <work-item-form v-else @confirm="showSuccessWrap"></work-item-form>
   </div>
 </template>
 <script>
@@ -19,6 +19,14 @@ export default {
     return {
       showSuccess: false,
     };
+  },
+  methods: {
+    showSuccessWrap() {
+      this.showSuccess = true;
+      this.$nextTick(() => {
+        this.$refs.success.countDown();
+      });
+    },
   },
 };
 </script>

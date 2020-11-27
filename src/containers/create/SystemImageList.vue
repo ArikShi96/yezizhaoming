@@ -75,7 +75,11 @@ export default {
       this.loading = false;
     },
     viewImage(image) {
-      this.$router.push({ path: `/create/system-image/${image.id}` });
+      this.$router.push({
+        path: this.$route.query.reselect
+          ? `/create/system-image/${image.id}?category_id=${image.category_id}&reselect=true`
+          : `/create/system-image/${image.id}?category_id=${image.category_id}`,
+      });
     },
   },
 };
