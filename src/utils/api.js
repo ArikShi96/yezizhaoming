@@ -45,7 +45,7 @@ export const AUTH_API = {
     return http("POST", "/api/oauth/getFullUserInfo", {}, { open_id: open_id });
   },
   getConfig: () => {
-    return http("get", "/wechat/jssdkconfig");
+    return http("get", "/api/wechat/jssdkconfig");
   },
 };
 
@@ -81,7 +81,7 @@ export const HOME_API = {
   },
   // 图库分类
   storeCategories: () => {
-    return http("GET", "/api//store/image/category", {});
+    return http("GET", "/api/store/image/category", {});
   },
   // 图库列表
   storeImages: ({ category_id, page, pagesize }) => {

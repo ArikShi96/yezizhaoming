@@ -9,6 +9,7 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 export default new VueRouter({
+  mode: "history",
   routes: [
     // 登录
     {

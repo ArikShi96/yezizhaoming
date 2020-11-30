@@ -57,8 +57,9 @@ export default {
     async loginByWechat(openid) {
       try {
         this.loading = true;
-        const res = await AUTH_API.quickLogin({ openid });
+        const res = await AUTH_API.quickLogin({ open_id: openid });
         store.setUserInfo(res.data || {});
+        store.setOpenId(openid);
         if (res.data.has_bind_mobile) {
           this.$alert("登录成功");
           this.navigateHome();

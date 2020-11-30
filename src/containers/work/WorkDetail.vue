@@ -27,7 +27,8 @@
 import { WORK_API } from "@/utils/api.js";
 import WorkItem from "@/components/work/WorkItem.vue";
 import QrCodeDialog from "@/containers/create/dialog/QrCodeDialog.vue";
-// import { AUTH_API } from "@/utils/api.js";
+import { AUTH_API } from "@/utils/api.js";
+import store from "@/utils/store.js";
 export default {
   components: {
     WorkItem,
@@ -40,16 +41,17 @@ export default {
       showQrCodeDialog: false,
     };
   },
-  // async beforeRouteEnter(to, from, next) {
-  //   if (from.name === "CreateWork") {
-  //     const res = await AUTH_API.getFullUserInfo({});
-  //     next((vm) => {
-  //       vm.showQrCodeDialog = !res.data.subscribe;
-  //     });
-  //   } else {
-  //     next();
-  //   }
-  // },
+  async beforeRouteEnter(to, from, next) {
+    const open_id = store.getOpenId();
+    if (from.name === "CreateWork" && open_id) {
+      const res = await AUTH_API.getFullUserInfo({ open_id });
+      next((vm) => {
+        vm.showQrCodeDialog = !res.data.subscribe;
+      });
+    } else {
+      next();
+    }
+  },
   mounted() {
     this.fetchWorkDetail();
   },

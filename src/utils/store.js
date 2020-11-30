@@ -22,6 +22,12 @@ export default {
   getUserInfo() {
     return window.localStorage.getItem(`${prefix}-user`);
   },
+  setOpenId(openId) {
+    window.localStorage.setItem(`${prefix}-open-id`, openId);
+  },
+  getOpenId() {
+    return window.localStorage.getItem(`${prefix}-open-id`);
+  },
   // 背景
   // 选择系统背景
   // 选择系统模板

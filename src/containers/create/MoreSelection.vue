@@ -35,7 +35,6 @@
   </div>
 </template>
 <script>
-import BgImg from "@/assets/image/test/bg.jpg";
 import { CREATE_API } from "@/utils/api.js";
 // 配件弹窗
 export default {
@@ -49,7 +48,6 @@ export default {
   },
   data() {
     return {
-      BgImg,
       activeName: "",
       allTabMap: {},
     };

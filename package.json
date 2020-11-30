@@ -15,6 +15,7 @@
     "element-ui": "^2.14.0",
     "html2canvas": "1.0.0-rc.4",
     "lodash": "^4.17.20",
+    "swiper": "^6.3.5",
     "vue": "^2.6.12",
     "vue-awesome-swiper": "^4.1.1",
     "vue-draggable-resizable-rotatable": "^1.0.11",

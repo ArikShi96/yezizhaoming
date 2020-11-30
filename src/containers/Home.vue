@@ -11,7 +11,7 @@
         :key="index"
         class="swiper-slide"
       >
-        <img class="swiper-image" :src="`${HOST_NAME}/${swiper.img}`" alt="" />
+        <img class="swiper-image" :src="swiper.img" alt="" />
       </swiper-slide>
     </swiper>
     <div class="home-links">
@@ -29,9 +29,9 @@
   </div>
 </template>
 <script>
-import { HOME_API, HOST_NAME } from "@/utils/api.js";
+import { HOME_API } from "@/utils/api.js";
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css";
+import "swiper/swiper-bundle.css";
 import SwiperOption from "@/utils/swiperOption.js";
 import store from "@/utils/store.js";
 export default {
@@ -41,7 +41,6 @@ export default {
   },
   data() {
     return {
-      HOST_NAME,
       swiperOption: { ...SwiperOption },
       swipers: [],
       loading: false,

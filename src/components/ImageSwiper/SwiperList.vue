@@ -11,7 +11,7 @@
 </template>
 <script>
 import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/css/swiper.css";
+import "swiper/swiper-bundle.css";
 import SwiperOption from "@/utils/swiperOption.js";
 export default {
   components: {

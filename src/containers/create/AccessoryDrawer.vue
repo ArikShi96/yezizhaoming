@@ -8,7 +8,7 @@
   >
     <div class="info-wrap">
       <i class="el-icon-close" @click="$emit('cancel')"></i>
-      <img class="info-img" :src="BgImg" alt="" />
+      <img class="info-img" :src="currentItem.img" alt="" />
       <div class="info-detail">
         <div class="name">{{ currentItem.name }}</div>
         <div class="meta">
@@ -49,7 +49,6 @@
   </el-drawer>
 </template>
 <script>
-import BgImg from "@/assets/image/test/bg.jpg";
 import { CREATE_API } from "@/utils/api.js";
 export default {
   props: {
@@ -64,7 +63,6 @@ export default {
   data() {
     return {
       loading: false,
-      BgImg,
       detailStock: {},
       selectedSpec: {}, // {label_key: id}
     };
