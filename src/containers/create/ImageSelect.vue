@@ -51,11 +51,11 @@ export default {
     reselectBackgroundImage(type) {
       switch (type) {
         case 0: {
-          this.$router.push({ path: "/create/system-images&reselect=true" });
+          this.$router.push({ path: "/create/system-images?reselect=true" });
           break;
         }
         case 1: {
-          this.$router.push({ path: "/create/system-templates&reselect=true" });
+          this.$router.push({ path: "/create/system-templates?reselect=true" });
           break;
         }
         case 2: {

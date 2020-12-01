@@ -1,7 +1,7 @@
 <template>
   <v-dialog
     class="share-dialog"
-    :visible="visible"
+    :visible="true"
     :showCloseIcon="true"
     @cancel="$emit('cancel')"
   >
@@ -38,9 +38,6 @@ const appid = "wxa035284c42ea6b97";
 // import { AUTH_API } from "@/utils/api.js";
 export default {
   props: {
-    visible: {
-      type: Boolean,
-    },
     detailItem: {
       type: Object,
     },
@@ -54,8 +51,8 @@ export default {
       FriendIcon,
     };
   },
-  methods: {
-    shareFriend() {
+  mounted() {
+    window.wx.ready(() => {
       window.wx.updateAppMessageShareData({
         title: `${this.detailItem.title}`, // 分享标题
         desc: "分享作品", // 分享描述
@@ -65,8 +62,6 @@ export default {
           // 设置成功
         },
       });
-    },
-    shareTimeline() {
       window.wx.updateTimelineShareData({
         title: `${this.detailItem.title}`, // 分享标题
         link: `${window.location.host}/work-detail/${this.detailItem.id}`, // 分享链接，该链接域名或路径必须与当前页面对应的公众号JS安全域名一致
@@ -75,7 +70,11 @@ export default {
           // 设置成功
         },
       });
-    },
+    });
+  },
+  methods: {
+    shareFriend() {},
+    shareTimeline() {},
     download() {
       // window.location.href((this.detailItem || {}).url);
       // 创建a标签 并设置其相关属性，最后触发其点击事件

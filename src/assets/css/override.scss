@@ -109,13 +109,17 @@
   .handle.handle-br {
     display: inline-block; // TODO
     background-image: url("../image/common/draggable/resize.png");
-    bottom: -1rem;
-    right: -1rem;
+    bottom: -0.75rem;
+    right: -0.75rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
   .handle.handle-rot {
     display: inline-block; // TODO
     background-image: url("../image/common/draggable/refresh.png");
-    top: -0.75rem;
+    top: -0.5rem;
+    width: 1.25rem;
+    height: 1.25rem;
   }
   .custom-draggble-img {
     width: 100%;
@@ -124,20 +128,20 @@
     background-repeat: no-repeat;
     .action-icon {
       display: none;
-      width: 2rem;
-      height: 2rem;
+      width: 1.25rem;
+      height: 1.25rem;
       position: absolute;
       &.lock {
-        top: -1rem;
-        left: -1rem;
+        top: -0.75rem;
+        left: -0.75rem;
       }
       &.plus {
-        left: -1rem;
-        bottom: -1rem;
+        left: -0.75rem;
+        bottom: -0.75rem;
       }
       &.delete {
-        top: -1rem;
-        right: -1rem;
+        top: -0.75rem;
+        right: -0.75rem;
       }
     }
   }

@@ -9,7 +9,6 @@ VueRouter.prototype.push = function push(location) {
 Vue.use(VueRouter);
 
 export default new VueRouter({
-  mode: "history",
   routes: [
     // 登录
     {
@@ -92,6 +91,16 @@ export default new VueRouter({
       },
       meta: {
         title: "填写表单",
+      },
+    },
+    {
+      path: "/work-share/:id",
+      name: "WorkShare",
+      component: () => {
+        return import("@/containers/work/WorkShare.vue");
+      },
+      meta: {
+        title: "我的作品",
       },
     },
     // 购物车

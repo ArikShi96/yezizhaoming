@@ -49,7 +49,7 @@
             />
             <img
               class="action-icon lock"
-              :src="LockIcon"
+              :src="item.unionId ? UnLockIcon : LockIcon"
               @touchstart.prevent.stop="handleLock(index)"
             />
             <img
@@ -134,6 +134,7 @@
 <script>
 import DeleteIcon from "@/assets/image/common/draggable/delete.png";
 import LockIcon from "@/assets/image/common/draggable/lock.png";
+import UnLockIcon from "@/assets/image/common/draggable/unlock.png";
 import PlusIcon from "@/assets/image/common/draggable/plus.png";
 import AddIcon from "@/assets/image/common/add.png";
 import BackIcon from "@/assets/image/common/back.png";
@@ -174,6 +175,7 @@ export default {
       RefreshIcon,
       DeleteIcon,
       LockIcon,
+      UnLockIcon,
       PlusIcon,
       allTabs: [],
       allTabMap: {},
@@ -344,9 +346,9 @@ export default {
       this.currentSelect = item;
     },
     onDragStop(x, y) {
-      // console.log(`x: ${x}, y: ${y}`);
       const offX = x - this.currentSelect.meta.offsetX;
       const offY = y - this.currentSelect.meta.offsetY;
+      // console.log(`x: ${x}, y: ${y}`);
       this.currentSelect.meta.offsetX = x;
       this.currentSelect.meta.offsetY = y;
       // 组合动,配件跟着动
@@ -360,6 +362,10 @@ export default {
       }
     },
     onResizstop(x, y, width, height) {
+      // const offX = x - this.currentSelect.meta.offsetX;
+      // const offY = y - this.currentSelect.meta.offsetY;
+      const offWidth = width / this.currentSelect.meta.width;
+      const offHeight = height / this.currentSelect.meta.height;
       // console.log(`width: ${width}, height: ${height}`);
       this.currentSelect.meta.offsetX = x;
       this.currentSelect.meta.offsetY = y;
@@ -367,7 +373,14 @@ export default {
       this.currentSelect.meta.height = height;
       // 组合动,配件跟着动
       if (this.currentSelect.unionId) {
-        // TODO
+        this.formData.workList.forEach((workItem) => {
+          if (workItem.parentUnionId === this.currentSelect.unionId) {
+            // workItem.meta.offsetX = workItem.meta.offsetX + offX;
+            // workItem.meta.offsetY = workItem.meta.offsetY + offY;
+            workItem.meta.width = parseInt(workItem.meta.width * offWidth);
+            workItem.meta.height = parseInt(workItem.meta.height * offHeight);
+          }
+        });
       }
     },
     onRotateStop(rotate) {

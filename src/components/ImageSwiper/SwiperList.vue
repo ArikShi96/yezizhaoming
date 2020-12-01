@@ -47,7 +47,10 @@ export default {
   },
   watch: {
     visible() {
-      if (this.visible && this.$route.query.category_id === this.category_id) {
+      if (
+        this.visible &&
+        this.$route.query.category_id === this.category_id + ""
+      ) {
         const imageId = this.$route.params.id;
         let currentSlideIndex = 0;
         this.images.forEach((image, index) => {

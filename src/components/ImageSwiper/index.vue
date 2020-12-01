@@ -7,7 +7,7 @@
             :visible="visible && subVisible"
             :images="item.images"
             :category_id="item.category_id"
-            @change-col="$emit('change-col')"
+            @change-col="changeCol"
           ></swiper-list>
         </swiper-slide>
       </swiper>
@@ -66,6 +66,11 @@ export default {
           this.subVisible = true;
         });
       }
+    },
+  },
+  methods: {
+    changeCol(col) {
+      this.$emit("change-col", col);
     },
   },
 };

@@ -106,6 +106,16 @@ export default {
         this.$alert(err.message);
       }
       this.loading = false;
+      // 处理默认值
+      try {
+        Object.values(this.detailStock.specs || {}).forEach((spec) => {
+          if (spec.list && spec.list.length === 1) {
+            this.toogleSize(spec.label_key, spec.list[0]);
+          }
+        });
+      } catch (err) {
+        //
+      }
     },
     toogleSize(label_key, size) {
       this.$set(this.selectedSpec, [label_key], size);
@@ -116,8 +126,11 @@ export default {
           return size.id;
         })
         .join("-");
-      const store =
-        (this.detailStock.stores && this.detailStock.stores[id]) || {};
+      const store = this.detailStock.stores && this.detailStock.stores[id];
+      if (!store) {
+        this.$alert("请选择配件的规格");
+        return;
+      }
       this.$emit(
         "confirm",
         JSON.parse(

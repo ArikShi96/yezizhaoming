@@ -15,11 +15,11 @@
       />
       <div class="work-detail">
         <div class="title">
-          <span v-if="computedItem.status === 0" class="status-tag running"
-            >制作中</span
-          >
+          <!-- <span v-if="computedItem.status === 0" class="status-tag running"
+            >空白</span
+          > -->
           <span v-if="computedItem.status === 1" class="status-tag completed"
-            >已付款</span
+            >制作中</span
           >
           <span v-if="computedItem.status === 2" class="status-tag completed"
             >已获取</span
@@ -45,7 +45,7 @@
             <img class="icon" :src="FetchIcon" />
             <span>获取3D图纸</span>
           </div>
-          <div class="action action-share" @click="showWorkShareDialog = true">
+          <div class="action action-share" @click="navigateShare">
             <img class="icon" :src="ShareIcon" />
             <span>分享海报</span>
           </div>
@@ -102,12 +102,6 @@
       @confirm="navigateWorkForm"
       @cancel="showFetchTipDialog = false"
     ></fetch-tip-dialog>
-    <!-- 分享弹框 -->
-    <work-share-dialog
-      :visible="showWorkShareDialog"
-      :detailItem="computedItem"
-      @cancel="showWorkShareDialog = false"
-    ></work-share-dialog>
   </div>
 </template>
 <script>
@@ -115,12 +109,10 @@ import ArrowIcon from "@/assets/image/common/arrow.png";
 import ShareIcon from "@/assets/image/common/work/share.png";
 import FetchIcon from "@/assets/image/common/work/3D.png";
 import ShoppingIcon from "@/assets/image/common/work/cart.png";
-import WorkShareDialog from "@/components/work/WorkShareDialog.vue";
 import FetchTipDialog from "@/components/work/FetchTipDialog.vue";
 import { WORK_API } from "@/utils/api.js";
 export default {
   components: {
-    WorkShareDialog,
     FetchTipDialog,
   },
   props: {
@@ -139,7 +131,6 @@ export default {
       ShoppingIcon,
       loading: false,
       showFetchTipDialog: false,
-      showWorkShareDialog: false,
       expand: false,
       hideExpandFirst: false,
       details: [{ items: [{}] }, { items: [{}] }],
@@ -182,6 +173,9 @@ export default {
         "expand",
         !this.initDetailItem.details[index].expand
       );
+    },
+    navigateShare() {
+      this.$router.push({ path: `/work-share/${this.basicItem.id}` });
     },
     navigateWorkForm() {
       this.$router.push({ path: `/work-form/${this.basicItem.id}` });

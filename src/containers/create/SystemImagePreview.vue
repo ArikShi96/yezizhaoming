@@ -89,7 +89,7 @@ export default {
     },
     confirm() {
       const cols = this.imagesList[this.row].images;
-      const currentItem = cols[this.col]; // TODO
+      const currentItem = cols[this.col];
       store.setBackgroundImage({ type: 0, ...currentItem });
       if (this.$route.query.reselect) {
         this.$router.push({ path: "/create/work" });
