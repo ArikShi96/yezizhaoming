@@ -76,6 +76,20 @@ export default {
     };
   },
   methods: {
+    // 验证手机号
+    validatePhone(value) {
+      const phoneReg = /^1[345678]\d{9}$/;
+      if (!phoneReg.test(value)) {
+        throw Error("手机号格式不正确");
+      }
+    },
+    // 验证邮箱
+    validateEmail(value) {
+      const emailReg = /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/;
+      if (!emailReg.test(value)) {
+        throw Error("邮箱格式不正确");
+      }
+    },
     async confirm() {
       const { name, mobile, email, occupation, address } = this.formData;
       this.loading = true;
@@ -83,6 +97,8 @@ export default {
         if (!name || !mobile || !email) {
           throw Error("信息不完整，请填写完整信息～");
         }
+        this.validatePhone(mobile);
+        this.validateEmail(email);
         await WORK_API.getDrawing({
           id: this.$route.params.id,
           name,

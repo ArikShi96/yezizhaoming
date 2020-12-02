@@ -31,6 +31,7 @@
           :x="(item.meta || {}).offsetX || 0"
           :y="(item.meta || {}).offsetY || 0"
           :r="(item.meta || {}).rotate || 0"
+          :lock-aspect-ratio="true"
           @dragging="onDraging(item)"
           @dragstop="onDragStop"
           @resizing="onResizing(item)"
@@ -393,6 +394,7 @@ export default {
       window.document
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.add("canvas"));
+      await util.sleep(500);
       const canvas = await html2canvas(this.$refs.drags, {
         backgroundColor: "transparent",
         allowTaint: true,
@@ -585,6 +587,7 @@ export default {
       window.document
         .getElementsByClassName("create-work-wrap")[0]
         .classList.add("hidden");
+      await util.sleep(500);
       const canvas = await html2canvas(
         document.getElementsByClassName("create-work-wrap")[0],
         {
@@ -751,10 +754,12 @@ export default {
       .scroll-items {
         display: flex;
         .scroll-item {
+          background-color: #ffffff;
           display: flex;
           justify-content: center;
           align-items: flex-end;
           padding: 0.25rem;
+          padding-bottom: 0;
           flex-shrink: 0;
           height: 3.75rem;
           width: 3.75rem;

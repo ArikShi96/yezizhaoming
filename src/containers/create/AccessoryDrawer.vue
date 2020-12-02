@@ -134,7 +134,7 @@ export default {
       this.$emit(
         "confirm",
         JSON.parse(
-          JSON.stringify({ ...this.currentItem, selectedStore: store })
+          JSON.stringify({ img: this.currentItem.img, selectedStore: store })
         )
       );
     },

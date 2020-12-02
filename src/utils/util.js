@@ -1,3 +1,6 @@
+export function sleep(time) {
+  return new Promise((resolve) => setTimeout(resolve, time));
+}
 export function getRanges(metas) {
   const points = getAllPoints(metas);
   const left = Math.min(...points[0]);

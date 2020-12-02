@@ -29,10 +29,10 @@
         <div class="info">
           <div class="date">{{ computedItem.updated_at }}</div>
           <div class="price">
-            ¥{{
+            {{
               computedItem.total_price
-                ? parseFloat(computedItem.total_price).toFixed(2)
-                : "0.00"
+                ? `¥${parseFloat(computedItem.total_price).toFixed(2)}`
+                : ""
             }}
           </div>
         </div>
@@ -66,13 +66,11 @@
             @click="expandSecondary(index)"
           />
           <span>{{ detail.category_name }}</span>
-          <span class="price"
-            >¥{{
-              detail.total_price
-                ? parseFloat(detail.total_price).toFixed(2)
-                : "0.00"
-            }}</span
-          >
+          <span class="price">{{
+            detail.total_price
+              ? `¥${parseFloat(detail.total_price).toFixed(2)}`
+              : ""
+          }}</span>
         </div>
         <div class="secondary-list" :class="{ visible: detail.expand }">
           <div
@@ -84,13 +82,11 @@
             <span>{{ item.goods_name }}</span>
             <div>
               <span class="quantity">x {{ item.quantity }}</span>
-              <span class="price price-small"
-                >¥{{
-                  item.total_price
-                    ? parseFloat(item.total_price).toFixed(2)
-                    : "0.00"
-                }}</span
-              >
+              <span class="price price-small">{{
+                item.total_price
+                  ? `¥${parseFloat(item.total_price).toFixed(2)}`
+                  : ""
+              }}</span>
             </div>
           </div>
         </div>

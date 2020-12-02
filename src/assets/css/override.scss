@@ -71,12 +71,14 @@
 }
 // draggable
 .vdrr {
-  border: 0.125rem solid #ffffff; // TODO
+  &:not(.hide-rotate) {
+    border: 0.125rem solid #ffffff; // TODO
+  }
   &.hide-rotate .handle.handle-rot {
     display: none !important;
   }
   &.canvas {
-    border: none;
+    border: none !important;
     .action-icon,
     .handle.handle-br,
     .handle.handle-rot {
@@ -149,7 +151,7 @@
     border: none !important;
   }
   &.active {
-    // border: 0.125rem solid #ffffff;
+    border: 0.125rem solid #ffffff;
     .custom-draggble-img .action-icon {
       display: inline-block;
     }
