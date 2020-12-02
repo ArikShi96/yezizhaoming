@@ -15,14 +15,14 @@
   </div>
 </template>
 <script>
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/swiper-bundle.css";
+// import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/dist/css/swiper.css";
 import SwiperList from "./SwiperList";
 import SwiperOption from "@/utils/swiperOption.js";
 export default {
   components: {
-    Swiper,
-    SwiperSlide,
+    // Swiper,
+    // SwiperSlide,
     SwiperList,
   },
   props: {
@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     swiper() {
-      return this.$refs.swiperList.$swiper;
+      return this.$refs.swiperList.swiper;
     },
   },
   watch: {

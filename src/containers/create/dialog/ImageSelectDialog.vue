@@ -5,6 +5,7 @@
       <div class="image-type-list">
         <el-upload
           ref="upload"
+          accept="image/*"
           :on-change="handleFileChange"
           :limit="1"
           :auto-upload="false"

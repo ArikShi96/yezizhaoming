@@ -10,13 +10,13 @@
   </div>
 </template>
 <script>
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/swiper-bundle.css";
+// import { Swiper, SwiperSlide } from "vue-awesome-swiper";
+import "swiper/dist/css/swiper.css";
 import SwiperOption from "@/utils/swiperOption.js";
 export default {
   components: {
-    Swiper,
-    SwiperSlide,
+    // Swiper,
+    // SwiperSlide,
   },
   props: {
     images: {
@@ -42,7 +42,7 @@ export default {
   },
   computed: {
     swiper() {
-      return this.$refs.swiper.$swiper;
+      return this.$refs.swiper.swiper;
     },
   },
   watch: {

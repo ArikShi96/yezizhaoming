@@ -71,9 +71,9 @@
 }
 // draggable
 .vdrr {
-  &:not(.hide-rotate) {
-    border: 0.125rem solid #ffffff; // TODO
-  }
+  // &:not(.hide-rotate) {
+  //   border: 0.125rem solid #ffffff; // TODO
+  // }
   &.hide-rotate .handle.handle-rot {
     display: none !important;
   }
@@ -128,6 +128,7 @@
     height: 100%;
     background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     .action-icon {
       display: none;
       width: 1.25rem;

@@ -1,6 +1,7 @@
 <template>
   <div class="home-page">
     <swiper
+      v-if="swipers.length > 0"
       id="swiperBox"
       :options="swiperOption"
       ref="swiper"
@@ -13,6 +14,7 @@
       >
         <img class="swiper-image" :src="swiper.img" alt="" />
       </swiper-slide>
+      <div class="swiper-pagination" slot="pagination"></div>
     </swiper>
     <div class="home-links">
       <v-button
@@ -30,21 +32,35 @@
 </template>
 <script>
 import { HOME_API } from "@/utils/api.js";
-import { Swiper, SwiperSlide } from "vue-awesome-swiper";
-import "swiper/swiper-bundle.css";
-import SwiperOption from "@/utils/swiperOption.js";
+import "swiper/dist/css/swiper.css";
+// import SwiperOption from "@/utils/swiperOption.js";
 import store from "@/utils/store.js";
 export default {
-  components: {
-    Swiper,
-    SwiperSlide,
-  },
   data() {
     return {
-      swiperOption: { ...SwiperOption },
+      swiperOption: {
+        //自动轮播
+        autoplay: {
+          delay: 3000,
+        },
+        speed: 500,
+        //开启循环模式
+        loop: true,
+        pagination: {
+          el: ".swiper-pagination",
+          bulletClass: "my-bullet",
+          bulletActiveClass: "my-bullet-active",
+          clickable: true,
+        },
+      },
       swipers: [],
       loading: false,
     };
+  },
+  computed: {
+    swiper() {
+      return this.$refs.swiperList.swiper;
+    },
   },
   mounted() {
     this.fetchSwiperList();
@@ -99,5 +115,24 @@ export default {
     height: 100vh;
     object-fit: cover;
   }
+}
+/deep/ .swiper-pagination-bullets {
+  bottom: 95% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+/deep/.swiper-pagination .my-bullet {
+  width: 0.75rem;
+  height: 0.75rem;
+  display: inline-block;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.5);
+  margin-right: 0.5rem;
+}
+/deep/.swiper-pagination .my-bullet-active {
+  width: 0.75rem;
+  height: 0.75rem;
+  background: rgba(255, 255, 255, 1);
 }
 </style>

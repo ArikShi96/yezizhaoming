@@ -19,11 +19,13 @@ import CustomDialog from "@/components/common/CustomDialog.vue";
 import CustomRadio from "@/components/common/CustomRadio.vue";
 import { HOST_NAME } from "@/utils/api.js";
 import store from "@/utils/store.js";
+import vueSwiper from "vue-awesome-swiper"; //引入vue-awesome-swiper
 
 if (process.env.NODE_ENV !== "development") {
   axios.defaults.baseURL = HOST_NAME;
 }
 
+Vue.use(vueSwiper);
 Vue.use(VueScroller);
 Vue.use(VueDraggableResizableRotatable);
 Vue.use(element);

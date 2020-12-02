@@ -150,6 +150,7 @@ import { CREATE_API, UPLOAD_API, WORK_API } from "@/utils/api.js";
 import store from "@/utils/store.js";
 import html2canvas from "html2canvas";
 import * as util from "@/utils/util.js";
+// import html2canvas from "@/assets/js/html2canvas.js";
 export default {
   components: {
     MoreSelection,
@@ -397,7 +398,9 @@ export default {
       await util.sleep(500);
       const canvas = await html2canvas(this.$refs.drags, {
         backgroundColor: "transparent",
-        allowTaint: true,
+        scale: 2,
+        dpi: 300,
+        allowTaint: false,
         useCORS: true,
         x: ranges[0],
         y: ranges[1],
@@ -591,7 +594,9 @@ export default {
       const canvas = await html2canvas(
         document.getElementsByClassName("create-work-wrap")[0],
         {
-          allowTaint: true,
+          scale: 2,
+          dpi: 300,
+          allowTaint: false,
           useCORS: true,
         }
       );
@@ -775,6 +780,13 @@ export default {
           &:focus,
           &.selected {
             border: 0.125rem solid #ffcc19;
+          }
+          .item-name {
+            width: 100%;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
           }
         }
       }

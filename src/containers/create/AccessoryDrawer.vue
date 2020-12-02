@@ -36,7 +36,7 @@
             }"
             @click="toogleSize(spec.label_key, size)"
           >
-            {{ size.alias }}
+            <span>{{ size.alias }}</span>
           </div>
           <div
             v-if="(spec.list || []).length % 3 === 2"
@@ -217,6 +217,15 @@ export default {
       font-family: PingFang, PingFang-SC;
       color: #333333;
       margin-bottom: 0.75rem;
+      span {
+        display: inline-block;
+        width: 100%;
+        padding: 0 0.125rem;
+        text-align: center;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+      }
       &.selected {
         background: #99c901;
         color: #ffffff;
