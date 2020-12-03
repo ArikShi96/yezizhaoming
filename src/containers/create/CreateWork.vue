@@ -464,10 +464,10 @@ export default {
     },
     // 底部操作
     toogleExpand() {
-      if (this.isUnLockMode) {
-        this.$alert("当前只允许编辑解锁的配件");
-        return;
-      }
+      // if (this.isUnLockMode) {
+      //   this.$alert("当前只允许编辑解锁的配件");
+      //   return;
+      // }
       this.expand = !this.expand;
     },
     async selectTab(selectedIndex) {
@@ -493,6 +493,7 @@ export default {
       this.$set(this.formData, "workList", [
         ...this.formData.workList,
         {
+          parentUnionId: this.isUnLockMode ? this.currentLockUnion : undefined,
           item,
           meta: { offsetX: 0, offsetY: 0, width: 100, height: 100, rotate: 0 },
           img: item.img,

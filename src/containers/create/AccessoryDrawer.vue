@@ -80,6 +80,7 @@ export default {
         .map((size) => {
           return size.id;
         })
+        .sort()
         .join("-");
       return this.detailStock.stores && this.detailStock.stores[id]
         ? this.detailStock.stores[id].price
@@ -96,6 +97,7 @@ export default {
   methods: {
     async fetchDetail() {
       this.loading = true;
+      this.selectedSpec = {};
       try {
         const res = await CREATE_API.storeStock({
           id: this.currentItem.id,
@@ -125,6 +127,7 @@ export default {
         .map((size) => {
           return size.id;
         })
+        .sort()
         .join("-");
       const store = this.detailStock.stores && this.detailStock.stores[id];
       if (!store) {
