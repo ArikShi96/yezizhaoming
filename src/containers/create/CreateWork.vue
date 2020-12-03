@@ -151,6 +151,7 @@ import store from "@/utils/store.js";
 import html2canvas from "html2canvas";
 import * as util from "@/utils/util.js";
 // import html2canvas from "@/assets/js/html2canvas.js";
+import domtoimage from "dom-to-image";
 export default {
   components: {
     MoreSelection,
@@ -586,13 +587,12 @@ export default {
     async generateBackground() {
       // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
       window.document
-        .getElementsByClassName("vdrr")
-        .forEach((el) => el.classList.add("canvas"));
-      window.document
         .getElementsByClassName("create-work-wrap")[0]
         .classList.add("hidden");
-      await util.sleep(500);
-      const canvas = await html2canvas(
+      window.document
+        .getElementsByClassName("vdrr")
+        .forEach((el) => el.classList.add("canvas"));
+      const url = await domtoimage.toPng(
         document.getElementsByClassName("create-work-wrap")[0],
         {
           scale: 2,
@@ -607,7 +607,6 @@ export default {
       window.document
         .getElementsByClassName("create-work-wrap")[0]
         .classList.remove("hidden");
-      let url = canvas.toDataURL("image/png");
       this.loading = true;
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "背景图片.png"),
