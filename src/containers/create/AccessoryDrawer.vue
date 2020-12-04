@@ -1,11 +1,5 @@
 <template>
-  <el-drawer
-    v-loading="loading"
-    title=""
-    direction="btt"
-    :visible="visible"
-    :with-header="false"
-  >
+  <el-drawer title="" direction="btt" :visible="visible" :with-header="false">
     <div class="info-wrap">
       <i class="el-icon-close" @click="$emit('cancel')"></i>
       <img class="info-img" :src="currentItem.img" alt="" />
@@ -17,7 +11,7 @@
         </div>
       </div>
     </div>
-    <div class="size-select-wraps">
+    <div v-loading="loading" class="size-select-wraps">
       <div
         v-for="spec in Object.values(detailStock.specs || {})"
         :key="spec.id"

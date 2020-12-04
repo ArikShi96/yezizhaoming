@@ -1,3 +1,31 @@
+export async function toUnionImage(url, ranges) {
+  const scale = 3;
+  const canvas = document.createElement("canvas");
+  canvas.width = scale * ranges[2];
+  canvas.height = scale * ranges[3];
+  const ctx = canvas.getContext("2d");
+  const image = await loadImage(url);
+  ctx.drawImage(
+    image,
+    ranges[0],
+    ranges[1],
+    ranges[2],
+    ranges[3],
+    0,
+    0,
+    scale * ranges[2],
+    scale * ranges[3]
+  );
+  return canvas.toDataURL("image/png");
+}
+export function loadImage(url) {
+  return new Promise((resolve, reject) => {
+    let img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = url;
+  });
+}
 export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));
 }

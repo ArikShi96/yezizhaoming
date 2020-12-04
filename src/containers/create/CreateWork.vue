@@ -20,7 +20,7 @@
         <img class="icon" :src="RefreshIcon" alt="" /> 切换场景
       </div>
       <!-- 所有编辑部件 -->
-      <div class="drag-list" ref="drags">
+      <div class="drag-list" ref="drags" style="height: 100vh">
         <v-draggable-resizable-rotatable
           v-for="(item, index) in formData.workList"
           :key="index"
@@ -148,7 +148,7 @@ import CancelWorkDialog from "@/containers/create/dialog/CancelWorkDialog.vue";
 import ConfirmWorkDialog from "@/containers/create/dialog/ConfirmWorkDialog.vue";
 import { CREATE_API, UPLOAD_API, WORK_API } from "@/utils/api.js";
 import store from "@/utils/store.js";
-import html2canvas from "html2canvas";
+// import html2canvas from "html2canvas";
 import * as util from "@/utils/util.js";
 // import html2canvas from "@/assets/js/html2canvas.js";
 import domtoimage from "dom-to-image";
@@ -396,23 +396,14 @@ export default {
       window.document
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.add("canvas"));
-      await util.sleep(500);
-      const canvas = await html2canvas(this.$refs.drags, {
-        backgroundColor: "transparent",
-        scale: 2,
-        dpi: 300,
-        allowTaint: false,
-        useCORS: true,
-        x: ranges[0],
-        y: ranges[1],
-        width: ranges[2],
-        height: ranges[3],
-      });
+      this.loading = true;
+      await util.sleep(100);
+      let url = await domtoimage.toPng(this.$refs.drags);
       window.document
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.remove("canvas"));
-      let url = canvas.toDataURL("image/png");
-      this.loading = true;
+      url = await util.toUnionImage(url, ranges);
+      // console.log(url);
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "合成图片.png"),
       });
@@ -505,7 +496,7 @@ export default {
     // 路由跳转
     async navigateAddType() {
       await this.formData.workList.forEach(async (workItem, index) => {
-        if (!workItem.parentUnionId) {
+        if (!workItem.parentUnionId && !workItem.unionId) {
           await this.handleLock(index);
         }
       });
@@ -535,15 +526,19 @@ export default {
         this.$alert("请选择要保存的配件");
         return;
       }
+      if (this.isUnLockMode) {
+        this.$alert("请先锁定当前解锁的配件");
+        return;
+      }
       this.formData.workList.forEach(async (workItem, index) => {
-        if (!workItem.parentUnionId) {
+        if (!workItem.parentUnionId && !workItem.unionId) {
           await this.handleLock(index);
         }
       });
       try {
+        this.loading = true;
         const url = await this.generateBackground();
         let res = {};
-        this.loading = true;
         if (this.currentWorkId) {
           res = await CREATE_API.edit({
             id: this.currentWorkId,
@@ -593,13 +588,7 @@ export default {
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.add("canvas"));
       const url = await domtoimage.toPng(
-        document.getElementsByClassName("create-work-wrap")[0],
-        {
-          scale: 2,
-          dpi: 300,
-          allowTaint: false,
-          useCORS: true,
-        }
+        document.getElementsByClassName("create-work-wrap")[0]
       );
       window.document
         .getElementsByClassName("vdrr")
@@ -607,11 +596,9 @@ export default {
       window.document
         .getElementsByClassName("create-work-wrap")[0]
         .classList.remove("hidden");
-      this.loading = true;
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "背景图片.png"),
       });
-      this.loading = false;
       return res.data.url;
     },
   },
