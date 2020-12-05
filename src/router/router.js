@@ -223,6 +223,17 @@ export default new VueRouter({
         title: "创作作品",
       },
     },
+    // 创作模板
+    {
+      path: "/template",
+      name: "TemplateManagement",
+      component: () => {
+        return import("@/containers/template/index.vue");
+      },
+      meta: {
+        title: "模板管理",
+      },
+    },
   ],
   // mode: 'history',
   scrollBehavior(to, from, savedPosition) {

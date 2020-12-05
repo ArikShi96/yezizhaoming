@@ -1,5 +1,6 @@
 import { http } from "./http";
 import store from "@/utils/store.js";
+import * as util from "@/utils/util.js";
 
 export const HOST_NAME = "https://dengshi.yuejike.com";
 
@@ -141,7 +142,7 @@ export const CREATE_API = {
   save: ({ title, products, data, url }) => {
     return http(
       "POST",
-      `/api/produce`,
+      util.isIframe() ? `/api/tpl` : `/api/produce`,
       {},
       {
         title,
@@ -155,7 +156,7 @@ export const CREATE_API = {
   edit: ({ id, products, data, title, url }) => {
     return http(
       "POST",
-      `/api/produce/${id}`,
+      util.isIframe() ? `/api/tpl/${id}` : `/api/produce/${id}`,
       {},
       {
         products,

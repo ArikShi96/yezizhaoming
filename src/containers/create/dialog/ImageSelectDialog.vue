@@ -15,7 +15,9 @@
           <div class="image-type">拍摄照片/从相册选择</div>
         </el-upload>
         <div class="image-type" @click="handleTypeClick(0)">系统图库</div>
-        <div class="image-type" @click="handleTypeClick(1)">模板选择</div>
+        <div v-if="!isIframe" class="image-type" @click="handleTypeClick(1)">
+          模板选择
+        </div>
       </div>
     </div>
   </v-dialog>
@@ -23,10 +25,12 @@
 <script>
 import store from "@/utils/store.js";
 import { UPLOAD_API } from "@/utils/api.js";
+import * as util from "@/utils/util.js";
 export default {
   data() {
     return {
       loading: false,
+      isIframe: util.isIframe(),
     };
   },
   methods: {

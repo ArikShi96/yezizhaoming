@@ -84,6 +84,8 @@
     .handle.handle-rot {
       visibility: hidden;
     }
+    position: fixed;
+    z-index: 10000;
   }
   .handle {
     border: none;

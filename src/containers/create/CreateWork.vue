@@ -392,23 +392,39 @@ export default {
     },
     // 页面元素转图片
     async toUnionImage(ranges) {
-      // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
-      window.document
-        .getElementsByClassName("vdrr")
-        .forEach((el) => el.classList.add("canvas"));
-      this.loading = true;
-      await util.sleep(100);
-      let url = await domtoimage.toPng(this.$refs.drags);
-      window.document
-        .getElementsByClassName("vdrr")
-        .forEach((el) => el.classList.remove("canvas"));
-      url = await util.toUnionImage(url, ranges);
-      // console.log(url);
-      const res = await UPLOAD_API({
-        upload_file: this.dataURLtoFile(url, "合成图片.png"),
-      });
-      this.loading = false;
-      return res.data.url;
+      try {
+        // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
+        window.document.getElementsByClassName("vdrr").forEach((el) => {
+          el.classList.add("canvas");
+          // el.style.transform = `translate(${el.style.left}, ${el.style.top}) ${el.style.transform}`;
+        });
+        this.loading = true;
+        await util.sleep(100);
+        let url = "";
+        if (util.isiOS()) {
+          url = await domtoimage.toPng(this.$refs.drags);
+          const res = await UPLOAD_API({
+            upload_file: this.dataURLtoFile(url, "合成图片.png"),
+          });
+          url = res.data.url;
+        } else {
+          url = await domtoimage.toSvg(this.$refs.drags);
+        }
+        window.document.getElementsByClassName("vdrr").forEach((el) => {
+          el.classList.remove("canvas");
+          // el.style.transform = `rotate${el.style.transform.split("rotate")[1]}`;
+        });
+        url = await util.toUnionImage(url, ranges);
+        // console.log(url);
+        const res = await UPLOAD_API({
+          upload_file: this.dataURLtoFile(url, "合成图片.png"),
+        });
+        this.loading = false;
+        return res.data.url;
+      } catch (err) {
+        this.$alert(err.message);
+        this.loading = false;
+      }
     },
     dataURLtoFile(dataurl, filename) {
       var arr = dataurl.split(","),
@@ -560,6 +576,7 @@ export default {
         // 跳转
         this.$router.push({ path: `/work-detail/${res.data.id}` });
       } catch (err) {
+        this.loading = false;
         this.$alert(err.message);
       }
     },
@@ -587,15 +604,32 @@ export default {
       window.document
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.add("canvas"));
-      const url = await domtoimage.toPng(
-        document.getElementsByClassName("create-work-wrap")[0]
-      );
+      let url = "";
+      if (util.isiOS()) {
+        url = await domtoimage.toPng(
+          document.getElementsByClassName("create-work-wrap")[0]
+        );
+        const res = await UPLOAD_API({
+          upload_file: this.dataURLtoFile(url, "合成图片.png"),
+        });
+        url = res.data.url;
+      } else {
+        url = await domtoimage.toSvg(
+          document.getElementsByClassName("create-work-wrap")[0]
+        );
+      }
       window.document
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.remove("canvas"));
       window.document
         .getElementsByClassName("create-work-wrap")[0]
         .classList.remove("hidden");
+      url = await util.toUnionImage(url, [
+        0,
+        0,
+        window.innerWidth,
+        window.innerHeight,
+      ]);
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "背景图片.png"),
       });

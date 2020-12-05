@@ -20,6 +20,7 @@ import CustomRadio from "@/components/common/CustomRadio.vue";
 import { HOST_NAME } from "@/utils/api.js";
 import store from "@/utils/store.js";
 import vueSwiper from "vue-awesome-swiper"; //引入vue-awesome-swiper
+import * as util from "@/utils/util.js";
 
 if (process.env.NODE_ENV !== "development") {
   axios.defaults.baseURL = HOST_NAME;
@@ -46,6 +47,7 @@ axios.defaults.withCredentials = true;
 router.beforeEach((to, from, next) => {
   document.title = to.meta.title || "叶子照明";
   if (
+    !util.isIframe() && // iframe不做登录认证
     !["/login", "/login/login-by-phone"].includes(to.path) &&
     !store.getAccessToken()
   ) {

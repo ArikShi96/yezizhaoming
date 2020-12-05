@@ -5,6 +5,7 @@ export async function toUnionImage(url, ranges) {
   canvas.height = scale * ranges[3];
   const ctx = canvas.getContext("2d");
   const image = await loadImage(url);
+  // document.body.appendChild(canvas);
   ctx.drawImage(
     image,
     ranges[0],
@@ -24,6 +25,13 @@ export function loadImage(url) {
     img.onload = () => resolve(img);
     img.onerror = reject;
     img.src = url;
+    img.crossOrigin = "Anonymous";
+  });
+}
+export function waitImageLoad(img) {
+  return new Promise((resolve, reject) => {
+    img.onload = () => resolve(img);
+    img.onerror = reject;
   });
 }
 export function sleep(time) {
@@ -82,4 +90,12 @@ function getPoint(meta, x, y) {
 // 获取弧度
 function radian(rotate) {
   return ((2 * Math.PI) / 360) * (360 - rotate);
+}
+// 客户端
+export function isiOS() {
+  const u = navigator.userAgent;
+  return !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/); //ios终端
+}
+export function isIframe() {
+  return window.top !== window;
 }
