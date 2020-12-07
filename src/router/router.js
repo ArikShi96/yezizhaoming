@@ -234,6 +234,16 @@ export default new VueRouter({
         title: "模板管理",
       },
     },
+    {
+      path: "/template/success",
+      name: "TemplateSuccess",
+      component: () => {
+        return import("@/containers/template/Success.vue");
+      },
+      meta: {
+        title: "模板创建成功",
+      },
+    },
   ],
   // mode: 'history',
   scrollBehavior(to, from, savedPosition) {

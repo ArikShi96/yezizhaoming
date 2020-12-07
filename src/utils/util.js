@@ -20,10 +20,12 @@ export async function toUnionImage(url, ranges) {
   return canvas.toDataURL("image/png");
 }
 export function loadImage(url) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     let img = new Image();
     img.onload = () => resolve(img);
-    img.onerror = reject;
+    img.onerror = () => {
+      throw Error("加载图片失败");
+    };
     img.src = url;
     img.crossOrigin = "Anonymous";
   });

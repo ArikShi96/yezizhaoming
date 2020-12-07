@@ -211,25 +211,61 @@ export default {
     this.currentWorkName = store.getWorkName();
     this.fetchAllTabs();
     const initFormData = store.getWorkData();
-    const replacedBackground = store.getBackgroundImage();
+    let replacedBackground = store.getBackgroundImage();
     if (initFormData) {
       this.formData = JSON.parse(initFormData);
     } else if (this.currentWorkId) {
       this.loading = true;
       try {
         const res = await WORK_API.getDetail({ id: this.currentWorkId });
-        this.formData = JSON.parse(res.data.data || "{}");
+        const formData = JSON.parse(res.data.data || "{}");
+        const originWidth = formData.innerWidth || window.innerWidth;
+        const originHeight = formData.innerHeight || window.innerHeight;
+        const innerWidth = window.innerWidth;
+        const innerHeight = window.innerHeight;
+        const offWidth = innerWidth / originWidth;
+        const offHeight = innerHeight / originHeight;
+        this.formData = formData;
+        this.formData.workList.forEach((item) => {
+          item.meta.offsetX = parseInt(item.meta.offsetX * offWidth);
+          item.meta.offsetY = parseInt(item.meta.offsetX * offHeight);
+          item.meta.width = parseInt(item.meta.width * offWidth);
+          item.meta.height = parseInt(item.meta.height * offWidth);
+        });
       } catch (err) {
         this.$alert(err.message);
       }
       this.loading = false;
     }
     if (replacedBackground) {
-      this.$set(
-        this.formData,
-        "backgroundImage",
-        JSON.parse(replacedBackground)
-      );
+      replacedBackground = JSON.parse(replacedBackground);
+      if (replacedBackground.type + "" === "1") {
+        this.loading = true;
+        try {
+          const res = await WORK_API.getTplDetail({
+            id: replacedBackground.id,
+          });
+          const formData = JSON.parse(res.data.data || "{}");
+          const originWidth = formData.innerWidth || window.innerWidth;
+          const originHeight = formData.innerHeight || window.innerHeight;
+          const innerWidth = window.innerWidth;
+          const innerHeight = window.innerHeight;
+          const offWidth = innerWidth / originWidth;
+          const offHeight = innerHeight / originHeight;
+          this.formData = formData;
+          this.formData.workList.forEach((item) => {
+            item.meta.offsetX = parseInt(item.meta.offsetX * offWidth);
+            item.meta.offsetY = parseInt(item.meta.offsetX * offHeight);
+            item.meta.width = parseInt(item.meta.width * offWidth);
+            item.meta.height = parseInt(item.meta.height * offWidth);
+          });
+        } catch (err) {
+          this.$alert(err.message);
+        }
+        this.loading = false;
+      } else {
+        this.$set(this.formData, "backgroundImage", replacedBackground);
+      }
     }
     // 清理localstorage
     store.removeWorkData();
@@ -561,20 +597,33 @@ export default {
             products: this.generateProducts(),
             title: this.currentWorkName,
             url,
-            data: JSON.stringify(this.formData),
+            data: JSON.stringify({
+              ...this.formData,
+              innerWidth: window.innerWidth,
+              innerHeight: window.innerHeight,
+            }),
           });
         } else {
           res = await CREATE_API.save({
             products: this.generateProducts(),
             title: store.getWorkName(),
             url,
-            data: JSON.stringify(this.formData),
+            data: JSON.stringify({
+              ...this.formData,
+              innerWidth: window.innerWidth,
+              innerHeight: window.innerHeight,
+            }),
           });
         }
         this.loading = false;
         this.$alert("保存成功");
         // 跳转
-        this.$router.push({ path: `/work-detail/${res.data.id}` });
+        await util.sleep(500);
+        if (util.isIframe()) {
+          this.$router.push({ path: "/template/success" });
+        } else {
+          this.$router.push({ path: `/work-detail/${res.data.id}` });
+        }
       } catch (err) {
         this.loading = false;
         this.$alert(err.message);

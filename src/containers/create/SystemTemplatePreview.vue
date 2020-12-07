@@ -1,6 +1,11 @@
 <template>
   <div class="system-template-preview-page">
-    <img class="preview-image" :src="currentItem.url" alt="" />
+    <img
+      v-loading="loading"
+      class="preview-image"
+      :src="currentItem.url"
+      alt=""
+    />
     <div class="preview-actions">
       <div class="preview-action" @click="backList">重新选择</div>
       <div class="preview-action" @click="confirm">立即使用</div>
@@ -9,6 +14,7 @@
 </template>
 <script>
 import store from "@/utils/store.js";
+import { HOME_API } from "@/utils/api.js";
 export default {
   data() {
     return {
@@ -22,13 +28,20 @@ export default {
   },
   methods: {
     async fetchTemplateDetail() {
-      this.currentItem = {};
+      try {
+        this.loading = true;
+        const res = await HOME_API.getTplDetail({ id: this.$route.params.id });
+        this.currentItem = res.data || {};
+      } catch (err) {
+        this.$alert(err.message);
+      }
+      this.loading = false;
     },
     backList() {
       this.$router.go(-1);
     },
     async confirm() {
-      store.setBackgroundImage({ type: 1, ...this.currentItem });
+      store.setBackgroundImage({ type: 1, id: this.$route.params.id });
       if (this.$route.query.reselect) {
         this.$router.push({ path: "/create/work" });
       } else {

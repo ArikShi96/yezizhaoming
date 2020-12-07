@@ -5,7 +5,7 @@
         v-for="(template, index) in templates || []"
         :key="index"
         class="template-item"
-        :src="template"
+        :src="template.url"
         @click="viewTemplate(template)"
       />
     </scroller>

@@ -5,7 +5,7 @@
 import store from "@/utils/store.js";
 export default {
   async mounted() {
-    if (this.$route.params.id) {
+    if (this.$route.query.id) {
       store.clearAll();
       store.setWorkId(this.$route.query.id);
       store.setWorkName(this.$route.query.title || "模板");
