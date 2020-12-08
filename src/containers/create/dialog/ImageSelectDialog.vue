@@ -1,5 +1,9 @@
 <template>
-  <v-dialog :visible="true" :showCloseIcon="true" @cancel="$emit('cancel')">
+  <v-dialog
+    :visible="true"
+    :showCloseIcon="!isIframe"
+    @cancel="$emit('cancel')"
+  >
     <div class="dialog-title">请选择一个场景</div>
     <div v-loading="loading" class="dialog-content">
       <div class="image-type-list">

@@ -40,6 +40,29 @@
           @rotatestop="onRotateStop"
         >
           <div
+            v-if="isIframe"
+            class="custom-draggble-img"
+            :style="{ backgroundImage: 'url(' + item.img + ')' }"
+          >
+            <img
+              class="action-icon delete"
+              :src="DeleteIcon"
+              @click.stop="handleDelete(index)"
+            />
+            <img
+              class="action-icon lock"
+              :src="item.unionId ? UnLockIcon : LockIcon"
+              @click.stop="handleLock(index)"
+            />
+            <img
+              v-if="!item.unionId"
+              class="action-icon plus"
+              :src="PlusIcon"
+              @click.stop="handleAdd(index)"
+            />
+          </div>
+          <div
+            v-else
             class="custom-draggble-img"
             :style="{ backgroundImage: 'url(' + item.img + ')' }"
           >
@@ -163,6 +186,7 @@ export default {
   },
   data() {
     return {
+      isIframe: util.isIframe(),
       currentWorkId: "",
       currentWorkName: "",
       loading: false,
@@ -658,14 +682,20 @@ export default {
         url = await domtoimage.toPng(
           document.getElementsByClassName("create-work-wrap")[0]
         );
-        const res = await UPLOAD_API({
-          upload_file: this.dataURLtoFile(url, "合成图片.png"),
-        });
-        url = res.data.url;
+        // const res = await UPLOAD_API({
+        //   upload_file: this.dataURLtoFile(url, "合成图片.png"),
+        // });
+        // url = res.data.url;
       } else {
         url = await domtoimage.toSvg(
           document.getElementsByClassName("create-work-wrap")[0]
         );
+        url = await util.toUnionImage(url, [
+          0,
+          0,
+          window.innerWidth,
+          window.innerHeight,
+        ]);
       }
       window.document
         .getElementsByClassName("vdrr")
@@ -673,12 +703,6 @@ export default {
       window.document
         .getElementsByClassName("create-work-wrap")[0]
         .classList.remove("hidden");
-      url = await util.toUnionImage(url, [
-        0,
-        0,
-        window.innerWidth,
-        window.innerHeight,
-      ]);
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "背景图片.png"),
       });

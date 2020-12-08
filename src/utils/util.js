@@ -1,5 +1,5 @@
 export async function toUnionImage(url, ranges) {
-  const scale = 3;
+  const scale = isiOS() ? 3 : 2;
   const canvas = document.createElement("canvas");
   canvas.width = scale * ranges[2];
   canvas.height = scale * ranges[3];
@@ -22,12 +22,12 @@ export async function toUnionImage(url, ranges) {
 export function loadImage(url) {
   return new Promise((resolve) => {
     let img = new Image();
+    img.setAttribute("crossOrigin", "anonymous");
+    img.src = url;
     img.onload = () => resolve(img);
     img.onerror = () => {
       throw Error("加载图片失败");
     };
-    img.src = url;
-    img.crossOrigin = "Anonymous";
   });
 }
 export function waitImageLoad(img) {
