@@ -159,6 +159,7 @@ export default {
 .bind-page {
   height: 100%;
   width: 100%;
+  min-height: 37.5rem;
 }
 .second-step {
   position: relative;

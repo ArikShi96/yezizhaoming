@@ -31,10 +31,20 @@ export function loadImage(url) {
   });
 }
 export function waitImageLoad(img) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     img.onload = () => resolve(img);
-    img.onerror = reject;
+    img.onerror = () => {
+      throw Error("加载图片失败");
+    };
   });
+}
+export function waitImagesLoad(className) {
+  const images = Array.from(document.querySelectorAll(`.${className}`));
+  return Promise.all(
+    images.map((img) => {
+      return waitImageLoad(img);
+    })
+  );
 }
 export function sleep(time) {
   return new Promise((resolve) => setTimeout(resolve, time));

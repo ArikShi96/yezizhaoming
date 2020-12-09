@@ -6,11 +6,14 @@
       @cancel="showMoreSelection = false"
       @select-item="selectItem"
     ></more-selection>
-    <div
-      v-if="!showMoreSelection"
-      class="create-work-wrap"
-      :style="{ backgroundImage: 'url(' + formData.backgroundImage.url + ')' }"
-    >
+    <div v-if="!showMoreSelection" class="create-work-wrap">
+      <!-- 背景图 -->
+      <img
+        v-if="formData.backgroundImage.url"
+        class="bg-img"
+        :src="formData.backgroundImage.url"
+        alt=""
+      />
       <!-- 操作按钮 -->
       <img class="back-icon" :src="BackIcon" alt="" @click="handleCancel" />
       <div class="add-type" @click="showConfirmWorkDialog = true">
@@ -39,11 +42,8 @@
           @rotating="onRotating(item)"
           @rotatestop="onRotateStop"
         >
-          <div
-            v-if="isIframe"
-            class="custom-draggble-img"
-            :style="{ backgroundImage: 'url(' + item.img + ')' }"
-          >
+          <div v-if="isIframe" class="custom-draggble-img">
+            <img class="draggble-bg-img" :src="item.img" alt="" />
             <img
               class="action-icon delete"
               :src="DeleteIcon"
@@ -61,11 +61,8 @@
               @click.stop="handleAdd(index)"
             />
           </div>
-          <div
-            v-else
-            class="custom-draggble-img"
-            :style="{ backgroundImage: 'url(' + item.img + ')' }"
-          >
+          <div v-else class="custom-draggble-img">
+            <img class="draggble-bg-img" :src="item.img" alt="" />
             <img
               class="action-icon delete"
               :src="DeleteIcon"
@@ -209,7 +206,19 @@ export default {
       // 创作内容
       formData: {
         backgroundImage: {},
-        workList: [],
+        workList: [
+          // {
+          //   meta: {
+          //     offsetX: 0,
+          //     offsetY: 0,
+          //     width: 100,
+          //     height: 100,
+          //     rotate: 0,
+          //   },
+          //   img:
+          //     "https://dengshi.yuejike.com/storage/backend/images/47823d1680d3739fdd33b6ddfb7d280.jpg",
+          // },
+        ],
       },
       currentSelect: "",
       isUnLockMode: false,
@@ -242,6 +251,7 @@ export default {
       this.loading = true;
       try {
         const res = await WORK_API.getDetail({ id: this.currentWorkId });
+        this.currentWorkName = res.data.title;
         const formData = JSON.parse(res.data.data || "{}");
         const originWidth = formData.innerWidth || window.innerWidth;
         const originHeight = formData.innerHeight || window.innerHeight;
@@ -252,7 +262,7 @@ export default {
         this.formData = formData;
         this.formData.workList.forEach((item) => {
           item.meta.offsetX = parseInt(item.meta.offsetX * offWidth);
-          item.meta.offsetY = parseInt(item.meta.offsetX * offHeight);
+          item.meta.offsetY = parseInt(item.meta.offsetY * offHeight);
           item.meta.width = parseInt(item.meta.width * offWidth);
           item.meta.height = parseInt(item.meta.height * offWidth);
         });
@@ -279,7 +289,7 @@ export default {
           this.formData = formData;
           this.formData.workList.forEach((item) => {
             item.meta.offsetX = parseInt(item.meta.offsetX * offWidth);
-            item.meta.offsetY = parseInt(item.meta.offsetX * offHeight);
+            item.meta.offsetY = parseInt(item.meta.offsetY * offHeight);
             item.meta.width = parseInt(item.meta.width * offWidth);
             item.meta.height = parseInt(item.meta.height * offWidth);
           });
@@ -456,13 +466,14 @@ export default {
         // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
         window.document.getElementsByClassName("vdrr").forEach((el) => {
           el.classList.add("canvas");
-          // el.style.transform = `translate(${el.style.left}, ${el.style.top}) ${el.style.transform}`;
         });
         this.loading = true;
         await util.sleep(100);
+        // await util.waitImagesLoad("draggble-bg-img"); // 等待所有图片onload
         let url = "";
         if (util.isiOS()) {
           url = await domtoimage.toPng(this.$refs.drags);
+          url = await domtoimage.toPng(this.$refs.drags); // TODO 两次
           const res = await UPLOAD_API({
             upload_file: this.dataURLtoFile(url, "合成图片.png"),
           });
@@ -472,7 +483,6 @@ export default {
         }
         window.document.getElementsByClassName("vdrr").forEach((el) => {
           el.classList.remove("canvas");
-          // el.style.transform = `rotate${el.style.transform.split("rotate")[1]}`;
         });
         url = await util.toUnionImage(url, ranges);
         // console.log(url);
@@ -619,7 +629,7 @@ export default {
           res = await CREATE_API.edit({
             id: this.currentWorkId,
             products: this.generateProducts(),
-            title: this.currentWorkName,
+            title: this.currentWorkName || "作品标题",
             url,
             data: JSON.stringify({
               ...this.formData,
@@ -630,7 +640,7 @@ export default {
         } else {
           res = await CREATE_API.save({
             products: this.generateProducts(),
-            title: store.getWorkName(),
+            title: store.getWorkName() || "作品标题",
             url,
             data: JSON.stringify({
               ...this.formData,
@@ -677,11 +687,15 @@ export default {
       window.document
         .getElementsByClassName("vdrr")
         .forEach((el) => el.classList.add("canvas"));
+      await util.sleep(100);
       let url = "";
       if (util.isiOS()) {
         url = await domtoimage.toPng(
           document.getElementsByClassName("create-work-wrap")[0]
         );
+        url = await domtoimage.toPng(
+          document.getElementsByClassName("create-work-wrap")[0]
+        ); // TODO 两次
         // const res = await UPLOAD_API({
         //   upload_file: this.dataURLtoFile(url, "合成图片.png"),
         // });
@@ -706,6 +720,9 @@ export default {
       const res = await UPLOAD_API({
         upload_file: this.dataURLtoFile(url, "背景图片.png"),
       });
+      // const img = document.createElement("img");
+      // img.src = url;
+      // document.body.append(img);
       return res.data.url;
     },
   },
@@ -718,9 +735,14 @@ export default {
 .create-work-wrap {
   height: 100%;
   position: relative;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
+  .bg-img {
+    z-index: -1;
+    object-fit: cover;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+  }
   &.hidden {
     .back-icon,
     .add-type,
