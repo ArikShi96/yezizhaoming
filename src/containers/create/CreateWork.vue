@@ -166,7 +166,7 @@ import AccessoryDrawer from "@/containers/create/AccessoryDrawer.vue";
 import ReturnDetailDialog from "@/containers/create/dialog/ReturnDetailDialog.vue";
 import CancelWorkDialog from "@/containers/create/dialog/CancelWorkDialog.vue";
 import ConfirmWorkDialog from "@/containers/create/dialog/ConfirmWorkDialog.vue";
-import { CREATE_API, UPLOAD_API, WORK_API } from "@/utils/api.js";
+import { CREATE_API, UPLOAD_API, WORK_API, HOME_API } from "@/utils/api.js";
 import store from "@/utils/store.js";
 // import html2canvas from "html2canvas";
 import * as util from "@/utils/util.js";
@@ -250,7 +250,11 @@ export default {
     } else if (this.currentWorkId) {
       this.loading = true;
       try {
-        const res = await WORK_API.getDetail({ id: this.currentWorkId });
+        const res = this.isIframe
+          ? await HOME_API.getTplDetail({
+              id: this.currentWorkId,
+            })
+          : await WORK_API.getDetail({ id: this.currentWorkId });
         this.currentWorkName = res.data.title;
         const formData = JSON.parse(res.data.data || "{}");
         const originWidth = formData.innerWidth || window.innerWidth;
@@ -276,7 +280,7 @@ export default {
       if (replacedBackground.type + "" === "1") {
         this.loading = true;
         try {
-          const res = await WORK_API.getTplDetail({
+          const res = await HOME_API.getTplDetail({
             id: replacedBackground.id,
           });
           const formData = JSON.parse(res.data.data || "{}");

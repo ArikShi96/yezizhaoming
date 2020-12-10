@@ -1,13 +1,16 @@
 <template>
   <div class="system-template-page">
     <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller">
-      <img
-        v-for="(template, index) in templates || []"
-        :key="index"
-        class="template-item"
-        :src="template.url"
-        @click="viewTemplate(template)"
-      />
+      <div class="image-wraps">
+        <img
+          v-for="(template, index) in templates || []"
+          :key="index"
+          class="template-item"
+          :src="template.url"
+          @click="viewTemplate(template)"
+        />
+        <div v-if="(templates || []).length % 3 === 2" style="width: 32%"></div>
+      </div>
     </scroller>
     <!-- <div v-if="templates && templates.length === 0" class="empty-message">
       暂无数据
@@ -82,15 +85,18 @@ export default {
 </script>
 <style lang="scss" scoped>
 .system-template-page {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
   padding: 0.625rem;
   min-height: 100vh;
+  .image-wraps {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
   .template-item {
     width: 32%;
     height: 10.625rem;
-    margin-bottom: 0.625rem;
+    margin: 0.3125rem 0;
   }
   .empty-message {
     margin: auto;

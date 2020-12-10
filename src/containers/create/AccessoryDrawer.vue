@@ -92,6 +92,7 @@ export default {
     async fetchDetail() {
       this.loading = true;
       this.selectedSpec = {};
+      this.detailStock = {};
       try {
         const res = await CREATE_API.storeStock({
           id: this.currentItem.id,

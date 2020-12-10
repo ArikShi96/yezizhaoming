@@ -77,6 +77,7 @@ export default {
   removeWorkData() {
     window.localStorage.removeItem(`${prefix}-work-data`);
   },
+  // 当前编辑的作品
   setWorkId(id) {
     window.localStorage.setItem(`${prefix}-work-id`, id);
   },

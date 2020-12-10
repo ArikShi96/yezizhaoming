@@ -39,7 +39,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .custom-alert {
-  z-index: 100;
+  z-index: 9999;
   text-align: center;
   position: fixed;
   top: 0;

@@ -4,6 +4,7 @@
 <script>
 import store from "@/utils/store.js";
 export default {
+  // <body><iframe src="http://localhost:8080/#/template?id=4"></iframe></body>
   async mounted() {
     if (this.$route.query.id) {
       store.clearAll();
