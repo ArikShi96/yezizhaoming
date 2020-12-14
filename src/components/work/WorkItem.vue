@@ -36,6 +36,11 @@
             }}
           </div>
         </div>
+        <div class="info">
+          <span class="date">{{
+            `作品编号: ${computedItem.order ? computedItem.order.order_no : ""}`
+          }}</span>
+        </div>
         <div class="actions">
           <div class="action action-buy" @click="navigateShoppingCard">
             <img class="icon" :src="ShoppingIcon" />
@@ -199,8 +204,8 @@ export default {
     align-items: center;
     padding: 0.625rem 1.25rem 0.625rem 0.5rem;
     .work-avatar {
-      height: 6.25rem;
-      width: 4rem;
+      height: 7.25rem;
+      width: 4.6rem;
       object-fit: cover;
       margin-right: 0.625rem;
       margin-left: 0.25rem;
@@ -237,7 +242,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        margin-bottom: 0.375rem;
+        margin-bottom: 0.1875rem;
         .date {
           font-size: 0.75rem;
           font-family: PingFangSC, PingFangSC-Regular;

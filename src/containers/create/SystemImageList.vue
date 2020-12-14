@@ -12,13 +12,20 @@
         :name="tab.id + ''"
       >
         <div class="image-list">
-          <img
+          <!-- <img
             v-for="(image, index) in imageMap[tab.id] || []"
             :key="index"
             class="image-item"
             :src="image.url"
             @click="viewImage(image)"
-          />
+          /> -->
+          <div
+            v-for="(image, index) in imageMap[tab.id] || []"
+            :key="index"
+            class="image-item"
+            :style="{ backgroundImage: 'url(' + image.url + ')' }"
+            @click="viewImage(image)"
+          ></div>
           <div
             v-if="(imageMap[tab.id] || []).length === 0"
             class="empty-message"
@@ -96,8 +103,11 @@ export default {
     .image-item {
       width: 49.8%;
       height: 18rem;
-      object-fit: cover;
+      /* object-fit: cover; */
       margin-bottom: 0.125rem;
+      background-repeat: no-repeat;
+      background-size: cover;
+      background-position: center;
     }
     .empty-message {
       margin: auto;

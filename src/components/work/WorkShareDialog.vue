@@ -14,7 +14,7 @@
       </div>
     </div>
     <div class="action-wrap">
-      <div class="action" @click="download">
+      <!-- <div class="action" @click="download">
         <img class="action-icon" :src="DownloadIcon" alt="" />
         <span>下载到本地</span>
       </div>
@@ -25,7 +25,8 @@
       <div class="action" @click="shareTimeline">
         <img class="action-icon" :src="FriendIcon" alt="" />
         <span>分享至朋友圈</span>
-      </div>
+      </div> -->
+      <v-button text="长按图片保存到本地" type="primary" />
     </div>
   </v-dialog>
 </template>

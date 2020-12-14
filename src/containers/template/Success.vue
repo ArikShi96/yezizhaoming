@@ -1,10 +1,12 @@
 <template>
   <div class="work-form-success">
     <img class="logo" :src="LogoPng" alt="" />
-    <div class="tip">您的模板已经成功创建</div>
+    <div class="tip">
+      {{ currentWorkId ? "您的模板已经成功编辑" : "您的模板已经成功创建" }}
+    </div>
     <v-button
       class="confirm-button"
-      text="继续创建"
+      :text="currentWorkId ? '继续编辑' : '继续创建'"
       type="primary"
       @onClick="navigateCreateTemplate"
     ></v-button>
@@ -17,12 +19,17 @@ export default {
   data() {
     return {
       LogoPng,
+      currentWorkId: this.$route.query.id || "",
     };
   },
   methods: {
     navigateCreateTemplate() {
       store.clearAll();
-      this.$router.push({ path: "/template" });
+      this.$router.push({
+        path: this.currentWorkId
+          ? `/template?id=${this.currentWorkId}`
+          : "/template",
+      });
     },
   },
 };

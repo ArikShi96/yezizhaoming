@@ -658,7 +658,11 @@ export default {
         // 跳转
         await util.sleep(500);
         if (util.isIframe()) {
-          this.$router.push({ path: "/template/success" });
+          this.$router.push({
+            path: this.currentWorkId
+              ? `/template/success?id=${this.currentWorkId}`
+              : "/template/success",
+          });
         } else {
           this.$router.push({ path: `/work-detail/${res.data.id}` });
         }

@@ -11,7 +11,7 @@
   </v-dialog>
 </template>
 <script>
-import QrCodeImage from "@/assets/image/common/qrCode.png";
+import QrCodeImage from "@/assets/image/common/qrCode1.jpg";
 export default {
   props: {
     visible: {
