@@ -47,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="customer-icon-wrap">
+    <div class="customer-icon-wrap" @click="navigateCustomer">
       <img class="customer-icon" :src="ServiceIcon" alt="" />
       <span>客服</span>
     </div>
@@ -114,8 +114,16 @@ export default {
         !this.workItem.details[index].expand
       );
     },
+    // 客服
+    navigateCustomer() {
+      window.location.href =
+        "https://www.sichuanglin.cn/app/index.php?i=6657&c=entry&do=chosekefu&m=cy163_customerservice";
+    },
     // 删除 || 结算
-    submitList() {},
+    submitList() {
+      window.location.href =
+        "https://www.sichuanglin.cn/app/index.php?i=6657&c=site&a=site&do=detail&id=16192";
+    },
   },
 };
 </script>

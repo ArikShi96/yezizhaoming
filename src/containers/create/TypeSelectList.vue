@@ -38,8 +38,8 @@ export default {
   },
   async mounted() {
     this.loading = true;
-    const res = await CREATE_API.categories({});
     try {
+      const res = await CREATE_API.categories({});
       this.items = res.data || [];
     } catch (err) {
       this.$alert(err.message);

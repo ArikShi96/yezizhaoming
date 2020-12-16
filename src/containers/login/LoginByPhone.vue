@@ -41,9 +41,8 @@
           :checked="accept"
           @on-click="accept = !accept"
         />
-        <span>同意</span>
-        <a href="https://www.baidu.com/" target="_blank">《叶子照明》</a>
-        <span>用户协议</span>
+        <span>同意《叶子照明》</span>
+        <a @click="navigateAlert">用户协议</a>
       </div>
     </div>
   </div>
@@ -152,6 +151,9 @@ export default {
     navigateHome() {
       store.setIsNewComer(true);
       this.$router.push({ path: "/" });
+    },
+    navigateAlert() {
+      this.$router.push({ path: "/login/login-alert" });
     },
   },
 };

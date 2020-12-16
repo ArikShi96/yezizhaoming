@@ -48,6 +48,9 @@ export const AUTH_API = {
   getConfig: () => {
     return http("get", "/api/wechat/jssdkconfig");
   },
+  getAlert: () => {
+    return http("get", "/api/user/agreement");
+  },
 };
 
 // 作品模块

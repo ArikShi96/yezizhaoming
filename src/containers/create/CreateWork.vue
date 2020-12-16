@@ -136,8 +136,8 @@
     ></accessory-drawer>
     <!-- 保存/取消作品 -->
     <return-detail-dialog
-      :visible="shoReturnDetailDialog"
-      @cancel="shoReturnDetailDialog = false"
+      :visible="showReturnDetailDialog"
+      @cancel="showReturnDetailDialog = false"
       @confirm="navigateDetail"
     ></return-detail-dialog>
     <cancel-work-dialog
@@ -187,7 +187,7 @@ export default {
       currentWorkId: "",
       currentWorkName: "",
       loading: false,
-      shoReturnDetailDialog: false,
+      showReturnDetailDialog: false,
       showCancelWorkDialog: false,
       showConfirmWorkDialog: false,
       showMoreSelection: false,
@@ -585,11 +585,16 @@ export default {
     },
     // 路由跳转
     async navigateAddType() {
-      await this.formData.workList.forEach(async (workItem, index) => {
+      let unlockIndex = -1;
+      this.formData.workList.some((workItem, index) => {
         if (!workItem.parentUnionId && !workItem.unionId) {
-          await this.handleLock(index);
+          unlockIndex = index;
+          return true;
         }
       });
+      if (unlockIndex !== -1) {
+        await this.handleLock(unlockIndex);
+      }
       store.setWorkData(this.formData);
       this.$router.push({ path: "/create/work/add-type" });
     },
@@ -601,11 +606,19 @@ export default {
       this.$router.push({ path: "/create/type-select" });
     },
     navigateDetail() {
-      this.$router.push({ path: `/work-detail/${this.currentWorkId}` });
+      if (this.isIframe) {
+        this.$router.push({
+          path: this.currentWorkId
+            ? `/template?id=${this.currentWorkId}`
+            : "/template",
+        });
+      } else {
+        this.$router.push({ path: `/work-detail/${this.currentWorkId}` });
+      }
     },
     handleCancel() {
       if (this.currentWorkId) {
-        this.shoReturnDetailDialog = true;
+        this.showReturnDetailDialog = true;
       } else {
         this.showCancelWorkDialog = true;
       }
@@ -620,11 +633,16 @@ export default {
         this.$alert("请先锁定当前解锁的配件");
         return;
       }
-      this.formData.workList.forEach(async (workItem, index) => {
+      let unlockIndex = -1;
+      this.formData.workList.some((workItem, index) => {
         if (!workItem.parentUnionId && !workItem.unionId) {
-          await this.handleLock(index);
+          unlockIndex = index;
+          return true;
         }
       });
+      if (unlockIndex !== -1) {
+        await this.handleLock(unlockIndex);
+      }
       try {
         this.loading = true;
         const url = await this.generateBackground();
@@ -657,7 +675,7 @@ export default {
         this.$alert("保存成功");
         // 跳转
         await util.sleep(500);
-        if (util.isIframe()) {
+        if (this.isIframe) {
           this.$router.push({
             path: this.currentWorkId
               ? `/template/success?id=${this.currentWorkId}`
@@ -668,7 +686,7 @@ export default {
         }
       } catch (err) {
         this.loading = false;
-        this.$alert(err.message);
+        this.$alert(err.message || err);
       }
     },
     generateProducts() {

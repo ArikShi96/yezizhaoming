@@ -41,6 +41,16 @@ export default new VueRouter({
         title: "叶子照明",
       },
     },
+    {
+      path: "/login/login-alert",
+      name: "loginAlert",
+      component: () => {
+        return import("@/containers/login/LoginAlert.vue");
+      },
+      meta: {
+        title: "叶子照明",
+      },
+    },
     // 首页
     {
       path: "/",
