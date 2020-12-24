@@ -19,7 +19,7 @@
             >空白</span
           > -->
           <span v-if="computedItem.status === 1" class="status-tag completed"
-            >制作中</span
+            >3D图纸制作中</span
           >
           <span v-if="computedItem.status === 2" class="status-tag completed"
             >已获取</span

@@ -8,6 +8,7 @@
     ></more-selection>
     <div v-if="!showMoreSelection" class="create-work-wrap">
       <!-- 背景图 -->
+      <!-- :style="{ backgroundImage: 'url(' + formData.backgroundImage.url + ')' }" -->
       <img
         v-if="formData.backgroundImage.url"
         class="bg-img"
@@ -560,18 +561,18 @@ export default {
       await this.fetchTabItems(this.allTabs[selectedIndex].id);
     },
     selectItem(item) {
-      this.expand = false;
+      // this.expand = false;
       this.showAccessoryDrawer = true;
       this.accessoryDrawerItem = item;
     },
     showMoreSelectionWrap() {
-      this.expand = false;
+      // this.expand = false;
       this.showMoreSelection = true;
     },
     confirmItemSelect(item) {
       this.showMoreSelection = false;
       this.showAccessoryDrawer = false;
-      this.expand = false;
+      // this.expand = false;
       this.$set(this.formData, "workList", [
         ...this.formData.workList,
         {
@@ -761,6 +762,9 @@ export default {
 .create-work-wrap {
   height: 100%;
   position: relative;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
   .bg-img {
     z-index: -1;
     object-fit: cover;
@@ -768,6 +772,7 @@ export default {
     top: 0;
     left: 0;
     height: 100%;
+    width: 100%;
   }
   &.hidden {
     .back-icon,
