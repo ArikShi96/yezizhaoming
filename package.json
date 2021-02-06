@@ -5,7 +5,7 @@
   "scripts": {
     "dev": "vue-cli-service serve",
     "start": "vue-cli-service serve",
-    "build": "vue-cli-service build && rm 叶子照明.zip && zip 叶子照明.zip -r ./dist",
+    "build": "rm -rf node_modules && npm cache clear --force && npm i && vue-cli-service build && rm -f 叶子照明.zip && zip 叶子照明.zip -r ./dist",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
