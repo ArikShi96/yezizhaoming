@@ -74,7 +74,9 @@ export default {
         .map((size) => {
           return size.id;
         })
-        .sort()
+        .sort((a, b) => {
+          return a - b;
+        })
         .join("-");
       return this.detailStock.stores && this.detailStock.stores[id]
         ? this.detailStock.stores[id].price
@@ -122,7 +124,9 @@ export default {
         .map((size) => {
           return size.id;
         })
-        .sort()
+        .sort((a, b) => {
+          return a - b;
+        })
         .join("-");
       const store = this.detailStock.stores && this.detailStock.stores[id];
       if (!store) {

@@ -38,6 +38,8 @@ export default {
       subVisible: false,
       swiperOption: {
         ...SwiperOption,
+        lazyLoading: true,
+        preloadImages: false,
         on: {
           slideChange: () => {
             this.$emit("change-row", this.swiper.activeIndex);

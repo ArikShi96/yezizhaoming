@@ -1,21 +1,21 @@
 <template>
   <div class="system-template-page">
     <scroller :on-refresh="refresh" :on-infinite="infinite" ref="myscroller">
-      <div class="image-wraps">
-        <!-- <img
+      <div class="image-wraps" v-lazy-container="{ selector: 'img' }">
+        <img
           v-for="(template, index) in templates || []"
           :key="index"
           class="template-item"
-          :src="template.url"
+          :data-src="template.url"
           @click="viewTemplate(template)"
-        /> -->
-        <div
+        />
+        <!-- <div
           v-for="(template, index) in templates || []"
           :key="index"
           class="template-item"
           :style="{ backgroundImage: 'url(' + template.url + ')' }"
           @click="viewTemplate(template)"
-        ></div>
+        ></div> -->
         <div v-if="(templates || []).length % 3 === 2" style="width: 32%"></div>
       </div>
     </scroller>
@@ -104,6 +104,7 @@ export default {
     width: 32%;
     height: 10.625rem;
     margin: 0.3125rem 0;
+    object-fit: cover;
     background-repeat: no-repeat;
     background-size: cover;
     background-position: center;

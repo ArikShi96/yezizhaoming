@@ -32,6 +32,8 @@ export default {
       swiperOption: {
         ...SwiperOption,
         direction: "vertical",
+        lazyLoading: true,
+        preloadImages: false,
         on: {
           slideChange: () => {
             this.$emit("change-col", this.swiper.activeIndex);

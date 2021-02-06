@@ -12,6 +12,8 @@ import axios from "axios";
 import VueDraggableResizableRotatable from "vue-draggable-resizable-rotatable";
 // VueScroller
 import VueScroller from "vue-scroller";
+// VueLazyload
+import VueLazyload from "vue-lazyload";
 // custom component
 import CustomAlert from "@/components/common/CustomAlert.vue";
 import CustomButton from "@/components/common/CustomButton.vue";
@@ -28,6 +30,7 @@ if (process.env.NODE_ENV !== "development") {
 
 Vue.use(vueSwiper);
 Vue.use(VueScroller);
+Vue.use(VueLazyload);
 Vue.use(VueDraggableResizableRotatable);
 Vue.use(element);
 
