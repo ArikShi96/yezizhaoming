@@ -2,7 +2,7 @@
   <div class="work-form-success">
     <img class="logo" :src="LogoPng" alt="" />
     <div class="tip">
-      您已的申请已经提交，客服会在2-3日发送到您的邮箱，请耐心等待…
+      您的申请已经提交，客服会在2-3日发送到您的邮箱，请耐心等待…
     </div>
     <v-button
       class="confirm-button"
