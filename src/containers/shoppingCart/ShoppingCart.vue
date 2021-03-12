@@ -122,7 +122,8 @@ export default {
     // 删除 || 结算
     submitList() {
       window.location.href =
-        "https://www.sichuanglin.cn/app/index.php?i=6657&c=site&a=site&do=detail&id=16192";
+        // "https://www.sichuanglin.cn/app/index.php?i=6657&c=site&a=site&do=detail&id=16192";
+        "https://www.sichuanglin.cn/app/index.php?i=6657&c=entry&m=ewei_shopv2&do=mobile";
     },
   },
 };

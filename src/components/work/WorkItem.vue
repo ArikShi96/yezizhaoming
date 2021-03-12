@@ -243,6 +243,7 @@ export default {
         align-items: center;
         justify-content: space-between;
         margin-bottom: 0.1875rem;
+        font-size: 0.75rem;
         .date {
           font-size: 0.75rem;
           font-family: PingFangSC, PingFangSC-Regular;
@@ -262,7 +263,7 @@ export default {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        font-size: 0.75rem;
+        font-size: 0.875rem;
         font-family: PingFangSC, PingFangSC-Regular;
         font-weight: 400;
         text-align: left;
@@ -272,9 +273,9 @@ export default {
           align-items: center;
           justify-content: space-between;
           .icon {
-            width: 0.875rem;
-            height: 0.875rem;
-            margin-right: 0.375rem;
+            width: 1rem;
+            height: 1rem;
+            margin-right: 0.25rem;
           }
         }
       }

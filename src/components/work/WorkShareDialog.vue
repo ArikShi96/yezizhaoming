@@ -5,13 +5,25 @@
     :showCloseIcon="true"
     @cancel="$emit('cancel')"
   >
-    <div class="preview-wrap">
-      <img class="preview-img" :src="(detailItem || {}).url" alt="" />
-      <div class="logo-wrap">
+    <div v-loading="loading" class="preview-wrap">
+      <img
+        v-if="!previewImageUrl"
+        class="preview-img"
+        :src="(detailItem || {}).url"
+        alt=""
+      />
+      <div v-if="!previewImageUrl" class="logo-wrap">
         <img class="logo" :src="LogoPng" alt="" />
         <div class="devide"></div>
         <div class="slogan">定制家，定制光</div>
       </div>
+      <img
+        v-if="previewImageUrl"
+        class="preview-img"
+        :class="{ 'height-auto': !!previewImageUrl }"
+        :src="previewImageUrl"
+        alt=""
+      />
     </div>
     <div class="action-wrap">
       <!-- <div class="action" @click="download">
@@ -35,8 +47,11 @@ import LogoPng from "@/assets/image/common/logo2.png";
 import DownloadIcon from "@/assets/image/common/share/download.png";
 import WechatIcon from "@/assets/image/common/share/wechat.png";
 import FriendIcon from "@/assets/image/common/share/friend.png";
+import * as util from "@/utils/util.js";
+import domtoimage from "dom-to-image";
+import { UPLOAD_API } from "@/utils/api.js";
+import html2canvas from "html2canvas";
 const appid = "wxa035284c42ea6b97";
-// import { AUTH_API } from "@/utils/api.js";
 export default {
   props: {
     detailItem: {
@@ -50,6 +65,9 @@ export default {
       DownloadIcon,
       WechatIcon,
       FriendIcon,
+      loading: false,
+      previewImageUrl: "",
+      isImageReady: false,
     };
   },
   mounted() {
@@ -72,6 +90,23 @@ export default {
         },
       });
     });
+    document.querySelector(".preview-img").onload = () => {
+      this.isImageReady = true;
+    };
+  },
+  watch: {
+    isImageReady() {
+      if (this.isImageReady) {
+        window.setTimeout(() => {
+          try {
+            this.generatePreviewImage();
+          } catch (err) {
+            this.loading = false;
+            this.previewImageUrl = "";
+          }
+        }, 500);
+      }
+    },
   },
   methods: {
     shareFriend() {},
@@ -94,6 +129,85 @@ export default {
 
       a.dispatchEvent(clickEvent);
     },
+    dataURLtoFile(dataurl, filename) {
+      var arr = dataurl.split(","),
+        mime = arr[0].match(/:(.*?);/)[1],
+        bstr = atob(arr[1]),
+        n = bstr.length,
+        u8arr = new Uint8Array(n);
+      while (n--) {
+        u8arr[n] = bstr.charCodeAt(n);
+      }
+      return new File([u8arr], filename, { type: mime });
+    },
+    // 生成带logo的preview image
+    async generatePreviewImage() {
+      // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
+      let url = "";
+      if (util.isiOS()) {
+        url = await domtoimage.toPng(
+          document.getElementsByClassName("preview-wrap")[0]
+        );
+        url = await domtoimage.toPng(
+          document.getElementsByClassName("preview-wrap")[0]
+        );
+      } else {
+        url = await domtoimage.toSvg(
+          document.getElementsByClassName("preview-wrap")[0]
+        );
+        url = await domtoimage.toSvg(
+          document.getElementsByClassName("preview-wrap")[0]
+        );
+        const rect = document
+          .getElementsByClassName("preview-wrap")[0]
+          .getBoundingClientRect();
+        url = await util.toUnionImage(url, [0, 0, rect.width, rect.height]);
+      }
+      this.loading = true;
+      const res = await UPLOAD_API({
+        upload_file: this.dataURLtoFile(url, "预览.png"),
+      });
+      this.loading = false;
+      this.previewImageUrl = res.data.url;
+    },
+    // 生成带logo的preview image
+    async generatePreviewImage2() {
+      this.loading = true;
+      const canvas = await html2canvas(
+        document.getElementsByClassName("preview-wrap")[0],
+        {
+          scale: 2,
+          allowTaint: false, //允许污染
+          useCORS: true, //使用跨域(当allowTaint为true时这段代码没什么用,下面解释)
+        }
+      );
+      const url = canvas.toDataURL("image/jpeg", 1);
+      this.previewImageUrl = url;
+      // const res = await UPLOAD_API({
+      //   upload_file: this.dataURLtoFile(url, "预览.png"),
+      // });
+      // this.previewImageUrl = res.data.url;
+      this.loading = false;
+    },
+    // 生成带logo的preview image
+    async generatePreviewImage3() {
+      // 第一个参数是需要生成截图的元素,第二个是自己需要配置的参数,宽高等
+      let url = "";
+      url = await domtoimage.toSvg(
+        document.getElementsByClassName("preview-wrap")[0]
+      );
+      // this.previewImageUrl = url;
+      const rect = document
+        .getElementsByClassName("preview-wrap")[0]
+        .getBoundingClientRect();
+      url = await util.toUnionImage(url, [0, 0, rect.width, rect.height]);
+      this.loading = true;
+      const res = await UPLOAD_API({
+        upload_file: this.dataURLtoFile(url, "预览.png"),
+      });
+      this.loading = false;
+      this.previewImageUrl = res.data.url;
+    },
   },
 };
 </script>
@@ -113,6 +227,10 @@ export default {
     height: 22.8rem;
     margin-bottom: 1rem;
     object-fit: cover;
+    &.height-auto {
+      height: auto;
+      margin-bottom: 0;
+    }
   }
   .logo-wrap {
     display: flex;

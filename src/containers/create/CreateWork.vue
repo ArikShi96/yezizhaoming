@@ -107,7 +107,7 @@
               {{ tab.name }}
             </div>
           </div>
-          <div class="scroll-items">
+          <div v-loading="scrollItemsLoading" class="scroll-items">
             <div
               v-for="(item, index) in scrollItems"
               :key="index"
@@ -194,7 +194,7 @@ export default {
       showMoreSelection: false,
       showAccessoryDrawer: false, // 配件弹窗
       accessoryDrawerItem: {},
-      expand: false,
+      expand: true,
       AddIcon,
       BackIcon,
       RefreshIcon,
@@ -204,6 +204,7 @@ export default {
       PlusIcon,
       allTabs: [],
       allTabMap: {},
+      scrollItemsLoading: false,
       // 创作内容
       formData: {
         backgroundImage: {},
@@ -325,8 +326,8 @@ export default {
           JSON.stringify({
             ...this.formData.workList[index],
             meta: {
-              offsetX: 0,
-              offsetY: 0,
+              offsetX: Math.floor(window.innerWidth / 2) - 50,
+              offsetY: Math.floor(window.innerHeight / 2) - 100,
               width: 100,
               height: 100,
               rotate: 0,
@@ -538,7 +539,9 @@ export default {
     async fetchTabItems(c_id) {
       if (!this.allTabMap[c_id]) {
         try {
+          this.scrollItemsLoading = true;
           const res = await CREATE_API.storeList({ c_id });
+          this.scrollItemsLoading = false;
           this.$set(this.allTabMap, c_id, res.data || []);
         } catch (err) {
           this.$alert(err.message);
@@ -578,7 +581,13 @@ export default {
         {
           parentUnionId: this.isUnLockMode ? this.currentLockUnion : undefined,
           item,
-          meta: { offsetX: 0, offsetY: 0, width: 100, height: 100, rotate: 0 },
+          meta: {
+            offsetX: Math.floor(window.innerWidth / 2) - 50,
+            offsetY: Math.floor(window.innerHeight / 2) - 100,
+            width: 100,
+            height: 100,
+            rotate: 0,
+          },
           img: item.img,
         },
       ]);
@@ -857,8 +866,6 @@ export default {
       left: 0;
       width: 100%;
       height: 0;
-      overflow-x: auto;
-      overflow-y: hidden;
       transition: height 0.5s;
       background-color: rgba($color: #000000, $alpha: 0.5);
       &.visible {
@@ -866,6 +873,8 @@ export default {
       }
       .scroll-tabs {
         display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
         .scroll-tab {
           flex-shrink: 0;
           padding: 0.25rem 0.875rem;
@@ -905,6 +914,8 @@ export default {
       }
       .scroll-items {
         display: flex;
+        overflow-x: auto;
+        overflow-y: hidden;
         .scroll-item {
           background-color: #ffffff;
           display: flex;

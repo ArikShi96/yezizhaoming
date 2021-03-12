@@ -2,7 +2,7 @@
   <el-drawer title="" direction="btt" :visible="visible" :with-header="false">
     <div class="info-wrap">
       <i class="el-icon-close" @click="$emit('cancel')"></i>
-      <img class="info-img" :src="currentItem.img" alt="" />
+      <img class="info-img" :src="calculateCoverImg" alt="" />
       <div class="info-detail">
         <div class="name">{{ currentItem.name }}</div>
         <div class="meta">
@@ -82,6 +82,15 @@ export default {
         ? this.detailStock.stores[id].price
         : "";
     },
+    calculateCoverImg() {
+      try {
+        return this.selectedSpec.color && this.selectedSpec.color.spec_img
+          ? this.selectedSpec.color.spec_img
+          : this.currentItem.img;
+      } catch (err) {
+        return this.currentItem.img;
+      }
+    },
   },
   watch: {
     visible() {
@@ -136,7 +145,7 @@ export default {
       this.$emit(
         "confirm",
         JSON.parse(
-          JSON.stringify({ img: this.currentItem.img, selectedStore: store })
+          JSON.stringify({ img: this.calculateCoverImg, selectedStore: store })
         )
       );
     },

@@ -44,12 +44,48 @@ export default {
     async handleFileChange(file) {
       this.loading = true;
       const type = 2;
+      let handledFile = null;
+      // if (!util.isiOS()) {
+      //   try {
+      //     handledFile = await this.removePicExif(file.raw);
+      //   } catch (err) {
+      //     handledFile = null;
+      //   }
+      // }
       const res = await UPLOAD_API({
-        upload_file: file.raw,
+        upload_file: handledFile || file.raw,
       });
       this.loading = false;
       store.setBackgroundImage({ type, url: res.data.url });
       this.$emit("confirm", type);
+    },
+    removePicExif(file) {
+      return new Promise((reslove) => {
+        if (file) {
+          let reader = new FileReader();
+          let image = new Image();
+          reader.onload = function (ev) {
+            image.src = ev.target.result;
+            image.onload = function () {
+              const ctxWidth = this.width;
+              const ctxHeight = this.height;
+              const canvas = document.createElement("canvas");
+              const ctx = canvas.getContext("2d");
+              canvas.width = ctxWidth;
+              canvas.height = ctxHeight;
+              ctx.drawImage(this, 0, 0, ctxWidth, ctxHeight);
+              canvas.toBlob((blob) => {
+                const newFile = new File([blob], file.name, {
+                  type: "image/jpeg",
+                  lastModified: Date.now(),
+                });
+                reslove(newFile);
+              });
+            };
+          };
+          reader.readAsDataURL(file);
+        }
+      });
     },
   },
 };
