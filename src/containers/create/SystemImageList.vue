@@ -12,20 +12,23 @@
         :name="tab.id + ''"
       >
         <div class="image-list" v-lazy-container="{ selector: 'img' }">
-          <img
+          <!-- <img
             v-for="(image, index) in imageMap[tab.id] || []"
             :key="index"
             class="image-item"
             :data-src="image.url"
             @click="viewImage(image)"
-          />
-          <!-- <div
+          /> -->
+          <div
             v-for="(image, index) in imageMap[tab.id] || []"
             :key="index"
             class="image-item"
             :style="{ backgroundImage: 'url(' + image.url + ')' }"
-            @click="viewImage(image)"
-          ></div> -->
+          >
+            <div class="image-view-icon" @click="viewImage(image)">
+              <span>...</span>
+            </div>
+          </div>
           <div
             v-if="(imageMap[tab.id] || []).length === 0"
             class="empty-message"
@@ -108,6 +111,25 @@ export default {
       background-repeat: no-repeat;
       background-size: cover;
       background-position: center;
+      position: relative;
+      .image-view-icon {
+        position: absolute;
+        right: 0.5rem;
+        bottom: 0.5rem;
+        width: 1.25rem;
+        height: 1.25rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border-radius: 100%;
+        color: #ffffff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+        span {
+          position: relative;
+          top: -0.25rem;
+        }
+      }
     }
     .empty-message {
       margin: auto;

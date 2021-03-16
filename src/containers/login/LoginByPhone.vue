@@ -149,7 +149,6 @@ export default {
     },
     // navigate 首页
     navigateHome() {
-      store.setIsNewComer(true);
       this.$router.push({ path: "/" });
     },
     navigateAlert() {

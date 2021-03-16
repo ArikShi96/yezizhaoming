@@ -1,37 +1,41 @@
 <template>
   <div v-if="visible" class="more-select">
     <div class="action-wrap" @click="$emit('cancel')">取消</div>
-    <el-tabs tab-position="left" v-model="activeName">
-      <el-tab-pane
+    <div class="scroll-wrap">
+      <div
         v-for="tab in allTabs"
         :key="tab.id"
-        :label="tab.name"
-        :name="tab.id + ''"
+        class="scroll-item"
+        :class="{ 'is-active': tab.id === activeName }"
+        @click="scrollToSection(tab.id)"
       >
-        <div class="items-wrap">
-          <div class="items-title">
-            <span class="line"></span>
-            <span>{{ tab.name || "" }}</span>
-            <span class="line"></span>
-          </div>
-          <div class="item-list">
-            <div
-              v-for="item in allTabMap[tab.id] || []"
-              :key="item.id"
-              class="item"
-              @click="$emit('select-item', item)"
-            >
-              <img class="item-image" :src="item.img" alt="" />
-              <div class="item-name">{{ item.name }}</div>
-            </div>
-            <div
-              v-if="allTabMap[tab.id] && allTabMap[tab.id].length % 3 === 2"
-              style="width: 3.75rem"
-            ></div>
-          </div>
+        {{ tab.name || "" }}
+      </div>
+    </div>
+    <div class="items-wrap">
+      <div v-for="tab in allTabs" :key="tab.id" class="item-wrap">
+        <div class="items-title" :data-title="tab.id">
+          <span class="line"></span>
+          <span>{{ tab.name || "" }}</span>
+          <span class="line"></span>
         </div>
-      </el-tab-pane>
-    </el-tabs>
+        <div class="item-list">
+          <div
+            v-for="item in allTabMap[tab.id] || []"
+            :key="item.id"
+            class="item"
+            @click="$emit('select-item', item)"
+          >
+            <img class="item-image" :src="item.img" alt="" />
+            <div class="item-name">{{ item.name }}</div>
+          </div>
+          <div
+            v-if="allTabMap[tab.id] && allTabMap[tab.id].length % 3 === 2"
+            style="width: 3.75rem"
+          ></div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 <script>
@@ -45,6 +49,10 @@ export default {
     allTabs: {
       type: Array,
     },
+    initActiveName: {
+      // eslint-disable-next-line vue/require-prop-type-constructor
+      type: String | Number,
+    },
   },
   data() {
     return {
@@ -53,14 +61,20 @@ export default {
     };
   },
   watch: {
-    visible() {
+    async visible() {
       if (this.allTabs.length && this.visible) {
-        this.activeName = this.allTabs[0].id + "";
+        this.activeName = this.initActiveName || this.allTabs[0].id;
+        await Promise.all(
+          this.allTabs.map((tab) => {
+            return this.fetchTabItems(tab.id);
+          })
+        );
+        this.scrollToSection(this.activeName);
       }
     },
-    activeName() {
-      this.fetchTabItems(this.activeName);
-    },
+    // activeName() {
+    //   this.fetchTabItems(this.activeName);
+    // },
   },
   methods: {
     async fetchTabItems(c_id) {
@@ -73,10 +87,55 @@ export default {
         }
       }
     },
+    scrollToSection(c_id) {
+      this.activeName = c_id;
+      let top = 0;
+      document.querySelectorAll(".items-title").forEach((el) => {
+        if (el.dataset.title === c_id + "") {
+          top = el.offsetTop;
+        }
+      });
+      document
+        .querySelector(".items-wrap")
+        .scrollTo({ top, left: 0, behavior: "smooth" });
+    },
   },
 };
 </script>
 <style lang="scss" scoped>
+.more-select {
+  display: flex;
+  .scroll-wrap {
+    flex: 0 0 25%;
+    border-right: 0.0625rem solid #eeeeee;
+    height: 100vh;
+    overflow-y: auto;
+    .scroll-item {
+      display: inline-flex;
+      align-items: center;
+      padding: 1rem 1rem 0.75rem 1rem;
+      font-size: 0.9375rem;
+      font-family: PingFangSC, PingFangSC-Medium;
+      color: #666666;
+      line-height: 1.3125rem;
+      width: 100%;
+      &.is-active {
+        font-family: PingFangSC, PingFangSC-Heavy;
+        font-weight: 800;
+        color: #99c901;
+        border-right: 0.0625rem solid #99c901;
+      }
+    }
+  }
+  .items-wrap {
+    flex: 0 0 75%;
+    height: 100vh;
+    overflow-y: auto;
+    .item-wrap {
+      margin-bottom: 1.25rem;
+    }
+  }
+}
 .action-wrap {
   font-size: 0.875rem;
   font-family: PingFangSC, PingFangSC-Heavy;
@@ -84,7 +143,7 @@ export default {
   text-align: right;
   color: #99c901;
   position: absolute;
-  padding: 0.625rem 1.25rem;
+  padding: 1.25rem;
   top: 0;
   right: 0;
   z-index: 100;
@@ -122,6 +181,7 @@ export default {
         width: 3.75rem;
         height: 3.75rem;
         margin-bottom: 0.625rem;
+        object-fit: cover;
       }
     }
   }

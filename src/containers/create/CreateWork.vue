@@ -3,6 +3,7 @@
     <more-selection
       :visible="showMoreSelection"
       :allTabs="allTabs || []"
+      :init-active-name="currentCId"
       @cancel="showMoreSelection = false"
       @select-item="selectItem"
     ></more-selection>

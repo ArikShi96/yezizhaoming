@@ -5,6 +5,7 @@
     @cancel="$emit('cancel')"
   >
     <div class="dialog-title">请选择一个场景</div>
+    <div class="dialog-tip">(仅支持竖屏场景)</div>
     <div v-loading="loading" class="dialog-content">
       <div class="image-type-list">
         <el-upload
@@ -45,13 +46,13 @@ export default {
       this.loading = true;
       const type = 2;
       let handledFile = null;
-      // if (!util.isiOS()) {
-      //   try {
-      //     handledFile = await this.removePicExif(file.raw);
-      //   } catch (err) {
-      //     handledFile = null;
-      //   }
-      // }
+      if (!util.isiOS()) {
+        try {
+          handledFile = await this.removePicExif(file.raw);
+        } catch (err) {
+          handledFile = null;
+        }
+      }
       const res = await UPLOAD_API({
         upload_file: handledFile || file.raw,
       });
@@ -97,6 +98,13 @@ export default {
   font-family: PingFangSC, PingFangSC-Medium;
   text-align: center;
   color: #000000;
+}
+.dialog-tip {
+  opacity: 0.9;
+  font-size: 0.75rem;
+  font-family: PingFangSC, PingFangSC-Medium;
+  text-align: center;
+  color: #666666;
 }
 .dialog-content {
   text-align: center;

@@ -59,10 +59,22 @@ export default {
   },
   // 是否第一次进来
   setIsNewComer(flag) {
-    window.localStorage.setItem(`${prefix}-is-fresh`, flag);
+    window.localStorage.setItem(`${prefix}-is-fresh`, `${flag}_${Date.now()}`);
   },
   getIsNewComer() {
-    return window.localStorage.getItem(`${prefix}-is-fresh`);
+    const isFresh = window.localStorage.getItem(`${prefix}-is-fresh`);
+    if (
+      isFresh &&
+      isFresh.split("_")[1] &&
+      Date.now() - Number(isFresh.split("_")[1]) < 1000 * 3600 * 24
+    ) {
+      return "false";
+    } else {
+      return "true";
+    }
+  },
+  removeIsNewComer() {
+    window.localStorage.removeItem(`${prefix}-is-fresh`);
   },
   // 保存当前工作进度
   setWorkData(formData) {

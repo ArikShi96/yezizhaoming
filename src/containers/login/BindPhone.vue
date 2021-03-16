@@ -49,7 +49,7 @@
 </template>
 <script>
 import { AUTH_API } from "@/utils/api.js";
-import store from "@/utils/store.js";
+// import store from "@/utils/store.js";
 export default {
   data() {
     return {
@@ -148,7 +148,6 @@ export default {
     },
     // navigate 首页
     navigateHome() {
-      store.setIsNewComer(true);
       this.$router.push({ path: "/" });
     },
     navigateAlert() {
